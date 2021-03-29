@@ -1,0 +1,110 @@
+package analizadores;
+
+import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.List;
+import objetos.ErrorCom;
+import objetos.Usuario;
+
+parser code {:
+
+    private List<ErrorCom> erroresCom;
+    private List<Usuario> usuarios;
+    private Usuario usuarioAct;    
+
+	public ParserUsers(LexerUsers lex) {
+		super(lex);
+        crearUsuarioNuevo();
+        this.erroresCom = lex.getErroresCom();
+        this.usuarios = new ArrayList<>();        
+	}
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/ 
+    public void syntax_error(Symbol s){ 
+        erroresCom.add(new ErrorCom("Sintactico","No se esperaba Componente",String.valueOf(s.left),String.valueOf(s.right),String.valueOf(s.value)));
+    } 
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintáctico 
+     * en el que ya no es posible una recuperación de errores.
+     **/ 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        erroresCom.add(new ErrorCom("Sintactico","Error sintactico Irrecuperable",String.valueOf(s.left),String.valueOf(s.right),String.valueOf(s.value)));
+    } 
+
+
+    protected int error_sync_size() {
+		return 2;
+	}
+
+    public List<ErrorCom> getErroresCom(){
+        return erroresCom;
+    }
+
+    public List<Usuario> getUsuarios(){
+        return usuarios;
+    }
+
+    private void crearUsuarioNuevo(){
+        Usuario usuario = new Usuario();
+        this.usuarioAct = usuario;        
+    }
+
+    private void insertarUsuario(){
+        this.usuarios.add(usuarioAct);
+    }
+
+    private void insertarNombre(String nombreU){
+        this.usuarioAct.setUsuario(nombreU);
+    }
+
+    private void insertarPass(String pass){
+        this.usuarioAct.setPassword(pass);
+    }
+
+    private void insertarFecha(String fecha){
+        this.usuarioAct.setFechaCrea(fecha);
+    }
+:}
+
+/* Terminals (tokens returned by the scanner). */
+terminal 	DOSPUNT,CORCHI,CORCHD,COMA,PARI,PARD;
+terminal 	INI,USUARIO,PASS,FECHA_CREA;
+terminal    String NOMBREP;
+
+
+/* Non-Terminals (created scanner). */
+non terminal  inicio,sig,par,nomP;
+//non terminal  inicio,sig,par,nomP,fin;
+
+
+/* The grammar : */
+
+start with inicio;
+
+inicio ::= 
+            INI PARI sig PARD
+;
+
+sig ::=
+            CORCHI {:crearUsuarioNuevo();:} par {:insertarUsuario();:} sig   
+        |   
+;
+
+par ::=
+            USUARIO  nomP:nom {:insertarNombre(String.valueOf(nom));:}  COMA par
+        |   PASS  nomP:nom  {:insertarPass(String.valueOf(nom));:}  COMA par
+        |   FECHA_CREA  nomP:nom  {:insertarFecha(String.valueOf(nom));:}  CORCHD
+;
+
+nomP ::=
+            DOSPUNT NOMBREP:nom {:RESULT = nom;:}
+;
+
+
+//fin ::=
+//            COMA par
+//        |   CORCHD sig
+//;

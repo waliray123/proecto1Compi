@@ -1,0 +1,117 @@
+package analizadoresRespuestas;
+
+import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.List;
+import objetos.ErrorCom;
+import objetos.Respuesta;
+
+parser code {:
+
+    private List<ErrorCom> erroresCom;
+    private List<Respuesta> respuestas;
+    private ErrorCom errorAct;
+    private Respuesta respuestaAct;
+
+
+	public ParserResp(LexerResp lex) {
+		super(lex);
+        this.erroresCom = lex.getErroresCom();
+        this.respuestas = new ArrayList<>();      
+        errorAct = new ErrorCom(); 
+        respuestaAct = new Respuesta(); 
+	}
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/ 
+    public void syntax_error(Symbol s){ 
+        erroresCom.add(new ErrorCom("Sintactico","No se esperaba Componente",String.valueOf(s.left),String.valueOf(s.right),String.valueOf(s.value)));
+    } 
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintáctico 
+     * en el que ya no es posible una recuperación de errores.
+     **/ 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        erroresCom.add(new ErrorCom("Sintactico","Error sintactico Irrecuperable",String.valueOf(s.left),String.valueOf(s.right),String.valueOf(s.value)));
+    }
+
+    protected int error_sync_size() {
+		return 2;
+	}
+
+    public List<ErrorCom> getErrores(){
+        return this.erroresCom;
+    }
+
+    public List<Respuesta> getRespuestas(){
+        return this.respuestas;
+    }
+
+    private void insertarNuevoError(){
+        this.errorAct = new ErrorCom(null,null,null,null,null);
+        this.erroresCom.add(errorAct);
+    }
+
+    private void insertarRespuesta(){
+        this.respuestaAct = new Respuesta(null,null);
+        this.respuestas.add(respuestaAct);
+    }
+:}
+
+/* Terminals (tokens returned by the scanner). */
+terminal 	DOSPUNT,CORCHI,CORCHD,COMA,MAY,MEN,EXCL;
+terminal    INI_RESPS,INI_RESP,FIN_RESPS,FIN_RESP,ERR,SOL;
+terminal    TIPO,DESC,LIN,COL,LEX,LOGU;
+terminal    String  CONT;
+
+
+
+
+/* Non-Terminals (created scanner). */
+non terminal  inicio,sig,par1,par2,nomp,fin1,fin2;
+
+
+
+/* The grammar : */
+
+start with inicio;
+
+inicio ::= 
+            MEN EXCL INI_RESPS MAY sig MEN EXCL FIN_RESPS MAY 
+        |   sig
+;
+
+sig ::=
+            MEN EXCL INI_RESP DOSPUNT ERR MAY CORCHI {:insertarNuevoError();:} par1 CORCHD MEN EXCL FIN_RESP MAY 
+        |   MEN EXCL INI_RESP DOSPUNT SOL MAY CORCHI {:insertarRespuesta();:} par2 CORCHD MEN EXCL FIN_RESP MAY 
+;
+
+par1 ::=
+            TIPO nomp:nom {:errorAct.setTipo(String.valueOf(nom));:} fin1
+        |   DESC nomp:nom {:errorAct.setDesc(String.valueOf(nom));:} fin1
+        |   LIN nomp:nom {:errorAct.setLin(String.valueOf(nom));:} fin1
+        |   COL nomp:nom {:errorAct.setCol(String.valueOf(nom));:} fin1
+        |   LEX nomp:nom {:errorAct.setLex(String.valueOf(nom));:} fin1
+;
+
+par2 ::=
+            TIPO nomp:nom {:respuestaAct.setTipo(String.valueOf(nom));:} fin2
+        |   DESC nomp:nom {:respuestaAct.setDesc(String.valueOf(nom));:} fin2
+        |   LOGU nomp:nom {:respuestaAct.setLogU(String.valueOf(nom));:} fin2
+;
+
+fin1 ::=
+            COMA par1
+        |   
+;
+
+fin2 ::=
+            COMA par2
+        |   
+;
+
+nomp ::=
+        DOSPUNT CONT:cont {:RESULT = cont;:}
+;

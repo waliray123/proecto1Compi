@@ -1,0 +1,182 @@
+package analizadores;
+
+import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.List;
+import objetos.ErrorCom;
+import objetos.Formulario;
+import objetos.Componente;
+
+parser code {:
+
+    private List<ErrorCom> erroresCom;
+    private List<Formulario> formularios;
+    private Formulario formularioAct;
+    private Componente componenteAct;
+
+
+	public ParserForms(LexerForms lex) {
+		super(lex);
+        this.erroresCom = lex.getErroresCom();
+        this.formularios = new ArrayList<>();      
+        componenteAct = new Componente(); 
+        formularioAct = new Formulario(); 
+	}
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/ 
+    public void syntax_error(Symbol s){ 
+        erroresCom.add(new ErrorCom("Sintactico","No se esperaba Componente",String.valueOf(s.left),String.valueOf(s.right),String.valueOf(s.value)));
+    } 
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintáctico 
+     * en el que ya no es posible una recuperación de errores.
+     **/ 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        erroresCom.add(new ErrorCom("Sintactico","Error sintactico Irrecuperable",String.valueOf(s.left),String.valueOf(s.right),String.valueOf(s.value)));
+    }
+
+    protected int error_sync_size() {
+		return 2;
+	}
+
+    private void insertarNuevoFormulario(){
+        this.formularioAct = new Formulario(); 
+        this.formularios.add(this.formularioAct);
+    }
+
+    private void insertarNuevoComp(){
+        this.componenteAct = new Componente();
+        this.formularioAct.setNuevoComponente(this.componenteAct);
+    }
+
+    public List<Formulario> getFormularios(){
+        return this.formularios;
+    }
+:}
+
+/* Terminals (tokens returned by the scanner). */
+terminal 	DOSPUNT,CORCHI,CORCHD,COMA,PARI,PARD,INI;
+terminal    String NOMBREP,NOMBRE_OPCION,ID;
+
+terminal    TITUL,NOMBRE,TEMA,USUARIO_CREA,FECHA_CREA,ID_COMP,NOMBRE_CAMPO,FORM,ID_FORM,ESTRUCT,NOMBRE_COMP;
+terminal    CLASE,INDICE,TEXTO_VIS,ALINEA,REQUE,OPCIONES,FILAS,COLUMNAS,URL;
+terminal    BLUE,DARK,WHITE;
+
+terminal    CAMPO_TEXT,AREA_TEXT,CHECK_BOX,RADIO,FICHERO,IMAGEN,COMBO;
+terminal    BOTON,CENTRO,IZQUIERDA,DERECHA,JUSTIFICAR;
+
+
+
+
+/* Non-Terminals (created scanner). */
+non terminal  inicio,sig,estr;
+non terminal  cont1,cont2,cont3,cont4,cont5,cont6;
+non terminal  fin1,fin2,form,formp,compon,componp;
+
+
+
+/* The grammar : */
+
+start with inicio;
+
+inicio ::= 
+            INI PARI form
+;
+
+form ::=
+            CORCHI {:insertarNuevoFormulario();:} sig formp PARD
+        |   PARD
+;
+
+formp ::=
+            COMA form
+        |   
+;
+
+compon ::=
+            CORCHI {:insertarNuevoComp();:} estr componp
+        |   
+;
+
+componp ::=
+            COMA compon
+        |   PARD
+;
+
+sig::=
+            ID_FORM cont2:nom {:formularioAct.setIdForm(String.valueOf(nom));:}  fin1
+        |   TITUL cont1:nom {:formularioAct.setTitulo(String.valueOf(nom));:} fin1
+        |   NOMBRE cont1:nom {:formularioAct.setNombre(String.valueOf(nom));:} fin1
+        |   TEMA cont6:nom {:formularioAct.setTema(String.valueOf(nom));:} fin1
+        |   USUARIO_CREA cont2:nom {:formularioAct.setUsuarioCrea(String.valueOf(nom));:} fin1
+        |   FECHA_CREA cont1:nom {:formularioAct.setFechaCrea(String.valueOf(nom));:} fin1
+        |   ESTRUCT DOSPUNT PARI compon fin1
+        |   fin1
+;
+
+estr ::=
+            ID_COMP cont2:nom {:componenteAct.setIdComp(String.valueOf(nom));:} fin2
+        |   NOMBRE_CAMPO cont1:nom {:componenteAct.setNombre(String.valueOf(nom));:} fin2
+        |   FORM cont2:nom {:componenteAct.setIdformulario(String.valueOf(nom));:}  fin2
+        |   CLASE cont3:nom {:componenteAct.setClase(String.valueOf(nom));:} fin2
+        |   INDICE cont1:nom {:componenteAct.setIndice(String.valueOf(nom));:} fin2
+        |   TEXTO_VIS cont1:nom {:componenteAct.setTextoVisible(String.valueOf(nom));:} fin2
+        |   ALINEA cont4:nom {:componenteAct.setAlineacion(String.valueOf(nom));:} fin2
+        |   REQUE cont1:nom {:componenteAct.setRequerido(String.valueOf(nom));:} fin2
+        |   OPCIONES cont5:nom {:componenteAct.setOpciones(String.valueOf(nom));:} fin2
+        |   FILAS cont1:nom {:componenteAct.setFilas(String.valueOf(nom));:} fin2
+        |   COLUMNAS cont1:nom {:componenteAct.setColumnas(String.valueOf(nom));:} fin2
+        |   URL cont1:nom {:componenteAct.setUrl(String.valueOf(nom));:} fin2
+
+        
+;
+
+cont1 ::=
+            DOSPUNT NOMBREP:nom {:RESULT = nom;:}
+;
+
+cont2 ::=
+            DOSPUNT ID:nom {:RESULT = nom;:}
+;
+
+cont3 ::=
+            DOSPUNT CAMPO_TEXT {:RESULT = "CAMPO_TEXT";:} 
+        |   DOSPUNT AREA_TEXT {:RESULT = "AREA_TEXT";:}
+        |   DOSPUNT CHECK_BOX {:RESULT = "CHECK_BOX";:}
+        |   DOSPUNT RADIO {:RESULT = "RADIO";:}
+        |   DOSPUNT FICHERO {:RESULT = "FICHERO";:}
+        |   DOSPUNT IMAGEN {:RESULT = "IMAGEN";:}
+        |   DOSPUNT COMBO {:RESULT = "COMBO";:}
+        |   DOSPUNT BOTON {:RESULT = "BOTON";:}
+;
+
+cont4 ::=
+            DOSPUNT CENTRO {:RESULT = "CENTRO";:}
+        |   DOSPUNT IZQUIERDA {:RESULT = "IZQUIERDA";:}
+        |   DOSPUNT DERECHA {:RESULT = "DERECHA";:}
+        |   DOSPUNT JUSTIFICAR {:RESULT = "JUSTIFICAR";:}
+;
+
+cont5 ::=
+            DOSPUNT NOMBRE_OPCION:nom {:RESULT = nom;:}
+        |   cont1:nom {:RESULT = String.valueOf(nom);:}
+;
+
+cont6 ::=
+            DOSPUNT DARK {:RESULT = "DARK";:}
+        |   DOSPUNT BLUE {:RESULT = "BLUE";:}
+        |   DOSPUNT WHITE {:RESULT = "WHITE";:}
+;
+
+fin1 ::=
+            COMA sig
+        |   CORCHD
+;
+
+fin2 ::=
+            COMA estr    
+        |   CORCHD    
+;

@@ -1,0 +1,277 @@
+package analizadores;
+
+import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.List;
+import objetos.ErrorCom;
+import objetos.Solicitud;
+import objetos.Parametro;
+import objetos.ControlSemantico;
+
+parser code {:
+
+    private List<ErrorCom> erroresCom;
+    private List<Solicitud> solicitudes;
+    private Solicitud solicitudAct; 
+    private Parametro parametroAct; 
+
+	public ParserIndigo(LexerIndigo lex) {
+		super(lex);
+        this.erroresCom = lex.getErroresCom();
+        this.solicitudes = new ArrayList<>();
+        crearSolicitud();
+	}
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/ 
+    public void syntax_error(Symbol s){ 
+        erroresCom.add(new ErrorCom("Sintactico","No se esperaba Componente",String.valueOf(s.left),String.valueOf(s.right),String.valueOf(s.value)));
+    } 
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintáctico 
+     * en el que ya no es posible una recuperación de errores.
+     **/ 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        erroresCom.add(new ErrorCom("Sintactico","Error sintactico Irrecuperable",String.valueOf(s.left),String.valueOf(s.right),String.valueOf(s.value)));
+    } 
+
+    private void setParam(String nombreParam,String lin,String col){
+        crearSolicitud();
+        solicitudAct.setTipo(nombreParam);         
+        solicitudAct.setLin(lin);
+        solicitudAct.setCol(col);
+        setNuevaSolicitud();
+    }
+
+    private void crearSolicitud(){
+        solicitudAct = new Solicitud();
+    }
+
+    private void setNuevaSolicitud(){
+        this.solicitudes.add(solicitudAct);
+    }
+
+    protected int error_sync_size() {
+		return 2;
+	}
+
+    public List<ErrorCom> getErroresCom(){
+        return erroresCom;
+    }
+
+    public List<Solicitud> getSolicitudes(){
+        return solicitudes;
+    }
+:}
+
+/* Terminals (tokens returned by the scanner). */
+terminal 	DOSPUNT,EXCL,MEN,MAY,CORCHI,CORCHD,CORCHCUADI,CORCHCUADD,GUIONB,GUIONM,DOLL,COMA,COMILLASIM;
+terminal 	INISOL,INISOLS,FINSOL,FINSOLS;
+terminal    String NOMBREP,NOMBRE_OPCION,ID;
+
+terminal    CREDEN_U,PARAMS_FORM,PARAMS_COMP,CONSULTS;
+terminal    CREAR_U;
+terminal    MOD_U,ELIM_U,LOG_U,NUEVO_FORM,ELIM_FORM,MOD_FORM,AGRE_COMP,ELIM_COMP,MOD_COMP,CONSULT;
+
+terminal    USUARIO,PASS,USUARIO_ANTI,USUARIO_NUEVO,NUEVO_PASS,FECHA_MOD;
+terminal    TITUL,NOMBRE,TEMA,USUARIO_CREA,FECHA_CREA,ID2,NOMBRE_CAMPO,FORM;
+terminal    CLASE,INDICE,TEXTO_VIS,ALINEA,REQUE,OPCIONES,FILAS,COLUMNAS,URL;
+terminal    BLUE,DARK,WHITE;
+
+terminal    CAMPO_TEXT,AREA_TEXT,CHECK_BOX,RADIO,FICHERO,IMAGEN,COMBO;
+terminal    BOTON,CENTRO,IZQUIERDA,DERECHA,JUSTIFICAR;
+
+
+
+
+/* Non-Terminals (created scanner). */
+non terminal  inicio,inicio2,sig;
+non terminal  sig2,sig3,sig4,sig5,sig6,sig7;
+non terminal  par1,par2,par3,par4,par5,par6,par7;
+non terminal  parp4,parpp4,parp7;
+non terminal  nomP,nomp2,fin1,fin2,fin4,fin6,fin7;
+non terminal  np1,np2,np3,np4;
+
+
+
+/* The grammar : */
+
+start with inicio;
+
+inicio ::= 
+            MEN EXCL inicio2 
+        
+;
+
+inicio2 ::=
+            INISOLS MAY sig
+        |   INISOL DOSPUNT sig2
+;
+
+sig ::=
+            MEN EXCL INISOL DOSPUNT sig2
+        |   MEN EXCL FINSOLS  MAY
+        |
+;
+
+sig2 ::=
+            CREAR_U:s  MAY sig4 {:setParam("CREAR_U", String.valueOf(sleft),String.valueOf(sright));:} par1 
+        |   MOD_U:s  MAY sig4 {:setParam("MOD_U", String.valueOf(sleft),String.valueOf(sright));:} par2 
+        |   ELIM_U:s  MAY sig4 {:setParam("ELIM_U", String.valueOf(sleft),String.valueOf(sright));:} par3 
+        |   LOG_U:s  MAY sig4 {:setParam("LOG_U", String.valueOf(sleft),String.valueOf(sright));:} par1 
+        |   NUEVO_FORM:s  MAY sig5 {:setParam("NUEVO_FORM", String.valueOf(sleft),String.valueOf(sright));:} par4 
+        |   ELIM_FORM:s  MAY sig5 {:setParam("ELIM_FORM", String.valueOf(sleft),String.valueOf(sright));:} par5 
+        |   MOD_FORM:s  MAY sig5 {:setParam("MOD_FORM", String.valueOf(sleft),String.valueOf(sright));:} par6 
+        |   AGRE_COMP:s  MAY sig6 {:setParam("AGRE_COMP", String.valueOf(sleft),String.valueOf(sright));:} par7 
+        |   ELIM_COMP:s  MAY sig6 {:setParam("ELIM_COMP", String.valueOf(sleft),String.valueOf(sright));:} par5 
+        |   MOD_COMP:s  MAY sig6 {:setParam("MOD_COMP", String.valueOf(sleft),String.valueOf(sright));:} par7 
+        |   CONSULT:s  MAY sig7 {:setParam("CONSULT", String.valueOf(sleft),String.valueOf(sright));:}
+;
+
+sig3 ::=
+            MEN FINSOL EXCL MAY sig
+;
+
+sig4 ::=
+            CORCHI CREDEN_U DOSPUNT CORCHCUADI CORCHI 
+;
+
+sig5 ::=
+            CORCHI PARAMS_FORM DOSPUNT CORCHCUADI CORCHI 
+;
+
+sig6 ::=
+            CORCHI PARAMS_COMP DOSPUNT CORCHCUADI CORCHI 
+;
+
+sig7 ::=
+            CORCHI CONSULTS DOSPUNT CORCHCUADI CORCHI 
+;
+
+par1 ::=
+            USUARIO  nomP:nom {:parametroAct.setNombre("USUARIO");solicitudAct.setNewParametro(parametroAct);:} fin1 
+        |   PASS  nomP:nom  {: parametroAct.setNombre("PASS");solicitudAct.setNewParametro(parametroAct);:} fin1
+        |   error:e par1
+        |   error:e fin1
+;
+
+par2 ::=
+            USUARIO_ANTI nomP:nom {: parametroAct.setNombre("USUARIO_ANTI");solicitudAct.setNewParametro(parametroAct);:} fin2 
+        |   USUARIO_NUEVO nomP:nom {: parametroAct.setNombre("USUARIO_NUEVO");solicitudAct.setNewParametro(parametroAct);:} fin2
+        |   NUEVO_PASS nomP:nom {: parametroAct.setNombre("NUEVO_PASS");solicitudAct.setNewParametro(parametroAct);:} fin2
+        |   FECHA_MOD nomP:nom {: parametroAct.setNombre("FECHA_MOD");solicitudAct.setNewParametro(parametroAct);:} fin2
+;
+
+par3 ::=
+            USUARIO  nomP {: parametroAct.setNombre("USUARIO");solicitudAct.setNewParametro(parametroAct);:} CORCHD CORCHCUADD CORCHD sig3
+;
+
+par4 ::=
+            parp4:par nomP {: parametroAct.setNombre(String.valueOf(par));solicitudAct.setNewParametro(parametroAct);:} fin4
+        |   ID2 nomp2 {: parametroAct.setNombre("ID");solicitudAct.setNewParametro(parametroAct);:} fin4
+        |   TEMA np4 {: parametroAct.setNombre("TEMA");solicitudAct.setNewParametro(parametroAct);:} fin4
+        |   USUARIO_CREA nomp2 {: parametroAct.setNombre("USUARIO_CREA");solicitudAct.setNewParametro(parametroAct);:} fin4
+        |   FECHA_CREA nomP {: parametroAct.setNombre("FECHA_CREA");solicitudAct.setNewParametro(parametroAct);:} fin4
+;
+
+parp4 ::=
+            parpp4:parp {:RESULT = String.valueOf(parp);:}
+;
+
+parpp4 ::=
+            TITUL {: RESULT = "TITUL"; :} 
+        |   NOMBRE {: RESULT = "NOMBRE"; :}       
+;
+
+par5 ::=        
+            ID2 nomp2 {: parametroAct.setNombre("ID");solicitudAct.setNewParametro(parametroAct);:} CORCHD CORCHCUADD CORCHD sig3
+;
+
+par6 ::=
+            parpp4:par nomP {: parametroAct.setNombre(String.valueOf(par));solicitudAct.setNewParametro(parametroAct);:} fin6
+        |   TEMA np4 {: parametroAct.setNombre("TEMA");solicitudAct.setNewParametro(parametroAct);:} fin6
+        |   ID2 nomp2 {: parametroAct.setNombre("ID");solicitudAct.setNewParametro(parametroAct);:} fin6
+;
+
+par7 ::=
+            parp7:par nomP {: parametroAct.setNombre(String.valueOf(par));solicitudAct.setNewParametro(parametroAct);:} fin7
+        |   CLASE np1 {: parametroAct.setNombre("CLASE");solicitudAct.setNewParametro(parametroAct);:} fin7
+        |   ALINEA np2 {: parametroAct.setNombre("ALINEA");solicitudAct.setNewParametro(parametroAct);:} fin7
+        |   OPCIONES np3 {: parametroAct.setNombre("OPCIONES");solicitudAct.setNewParametro(parametroAct);:} fin7
+        |   ID2 nomp2 {: parametroAct.setNombre("ID");solicitudAct.setNewParametro(parametroAct);:} fin7
+        |   FORM nomp2 {: parametroAct.setNombre("FORM");solicitudAct.setNewParametro(parametroAct);:} fin7
+;
+
+parp7 ::=
+            NOMBRE_CAMPO {: RESULT = "NOMBRE_CAMPO"; :}
+        |   INDICE {: RESULT = "INDICE"; :}
+        |   TEXTO_VIS {: RESULT = "TEXTO_VIS"; :}
+        |   REQUE {: RESULT = "REQUE"; :}
+        |   FILAS {: RESULT = "FILAS"; :}
+        |   COLUMNAS {: RESULT = "COLUMNAS"; :}
+        |   URL {: RESULT = "URL"; :}
+;
+
+nomP ::=
+            DOSPUNT NOMBREP:nom {:parametroAct = new Parametro();parametroAct.setContenido(nom);:}
+;
+
+nomp2 ::=
+            DOSPUNT ID:nom {:parametroAct = new Parametro();parametroAct.setContenido(nom);:}
+;
+
+np1 ::=
+            DOSPUNT CAMPO_TEXT {:parametroAct = new Parametro();parametroAct.setContenido("CAMPO_TEXT");:}
+        |   DOSPUNT AREA_TEXT {:parametroAct = new Parametro();parametroAct.setContenido("AREA_TEXT");:}
+        |   DOSPUNT CHECK_BOX {:parametroAct = new Parametro();parametroAct.setContenido("CHECK_BOX");:}
+        |   DOSPUNT RADIO {:parametroAct = new Parametro();parametroAct.setContenido("RADIO");:}
+        |   DOSPUNT FICHERO {:parametroAct = new Parametro();parametroAct.setContenido("FICHERO");:}
+        |   DOSPUNT IMAGEN {:parametroAct = new Parametro();parametroAct.setContenido("IMAGEN");:}
+        |   DOSPUNT COMBO {:parametroAct = new Parametro();parametroAct.setContenido("COMBO");:}
+        |   DOSPUNT BOTON {:parametroAct = new Parametro();parametroAct.setContenido("BOTON");:}
+;
+
+np2 ::=
+            DOSPUNT CENTRO {:parametroAct = new Parametro();parametroAct.setContenido("CENTRO");:}
+        |   DOSPUNT IZQUIERDA {:parametroAct = new Parametro();parametroAct.setContenido("IZQUIERDA");:}
+        |   DOSPUNT DERECHA {:parametroAct = new Parametro();parametroAct.setContenido("DERECHA");:}
+        |   DOSPUNT JUSTIFICAR {:parametroAct = new Parametro();parametroAct.setContenido("JUSTIFICAR");:}
+;
+
+np3 ::=
+            DOSPUNT NOMBRE_OPCION:nomOP {:parametroAct = new Parametro();parametroAct.setContenido(nomOP);:}
+        |   nomP
+;
+
+np4 ::=
+            DOSPUNT DARK {:parametroAct = new Parametro();parametroAct.setContenido("DARK");:}
+        |   DOSPUNT BLUE {:parametroAct = new Parametro();parametroAct.setContenido("BLUE");:}
+        |   DOSPUNT WHITE {:parametroAct = new Parametro();parametroAct.setContenido("WHITE");:}        
+;
+
+fin1 ::=
+            COMA par1
+        |   CORCHD CORCHCUADD CORCHD sig3
+;
+
+fin2 ::=
+            COMA par2
+        |   CORCHD CORCHCUADD CORCHD sig3
+;
+
+fin4 ::=
+            COMA par4
+        |   CORCHD CORCHCUADD CORCHD sig3
+;
+
+fin6 ::=
+            COMA par6
+        |   CORCHD CORCHCUADD CORCHD sig3
+;
+
+fin7 ::=
+            COMA par7
+        |   CORCHD CORCHCUADD CORCHD sig3
+;

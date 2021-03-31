@@ -99,9 +99,11 @@ public class UserEditor extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
+        jMenu5 = new javax.swing.JMenu();
+        jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
-        jMenu4 = new javax.swing.JMenu();
         jMenuItem8 = new javax.swing.JMenuItem();
+        jMenuItem10 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -237,27 +239,43 @@ public class UserEditor extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem7);
 
-        jMenuItem6.setText("FORMSIDUS");
+        jMenuBar1.add(jMenu3);
+
+        jMenu5.setText("Formularios");
+
+        jMenuItem9.setText("Mis formularios");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem9);
+
+        jMenuItem6.setText("Generar URL");
         jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem6ActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem6);
+        jMenu5.add(jMenuItem6);
 
-        jMenuBar1.add(jMenu3);
-
-        jMenu4.setText("Crear");
-
-        jMenuItem8.setText("Crear Formulario");
+        jMenuItem8.setText("Cargar Form");
         jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem8ActionPerformed(evt);
             }
         });
-        jMenu4.add(jMenuItem8);
+        jMenu5.add(jMenuItem8);
 
-        jMenuBar1.add(jMenu4);
+        jMenuItem10.setText("Obtener Form");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem10);
+
+        jMenuBar1.add(jMenu5);
 
         setJMenuBar(jMenuBar1);
 
@@ -439,15 +457,6 @@ public class UserEditor extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
-    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        String respuestas = "";
-        NYCliente5 nyClient = new NYCliente5();
-        respuestas = nyClient.obtenerFormulariosPorIdUsuario(usuarioLog);
-
-        ReporteRespuestas repResp = new ReporteRespuestas(respuestas);
-        repResp.setVisible(true);
-    }//GEN-LAST:event_jMenuItem6ActionPerformed
-
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         String respuestas = "";
         NYCliente5 nyClient = new NYCliente5();
@@ -457,7 +466,16 @@ public class UserEditor extends javax.swing.JFrame {
         repResp.setVisible(true);
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
-    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        String respuestas = "";
+        NYCliente5 nyClient = new NYCliente5();
+        respuestas = nyClient.obtenerFormulariosPorIdUsuario(usuarioLog);
+
+        ReporteRespuestas repResp = new ReporteRespuestas(respuestas);
+        repResp.setVisible(true);
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
         if (usuarioLog.isEmpty()) {
             JOptionPane.showMessageDialog(this, "NO HAY USUARIO LOGUEADO, NO PUEDE CREAR FORMULARIO", "ERROR", JOptionPane.ERROR_MESSAGE);
         } else {
@@ -471,7 +489,100 @@ public class UserEditor extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, respuestas, "URL", JOptionPane.INFORMATION_MESSAGE);
             }
         }
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        //Cargar form
+        String documento = "";
+        try {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Archivo de formulario", "form"));
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            int seleccion = fileChooser.showOpenDialog(this);
+            if (seleccion == APPROVE_OPTION) {
+                String pathFile = fileChooser.getSelectedFile().getPath();
+                FileReader entrada = new FileReader(pathFile);
+                int cont = entrada.read();
+                while (cont != -1) {
+                    documento += (char) cont;
+                    cont = entrada.read();
+                }
+                //this.pathCargado = pathFile;
+            }
+            //this.jTextArea1.setText(documento);
+            String respuestas = "";
+            NYCliente5 nyClient = new NYCliente5();
+            respuestas = nyClient.cargarForm(documento);
+            JOptionPane.showMessageDialog(this, respuestas, "Cargar form", JOptionPane.INFORMATION_MESSAGE);
+        } catch (HeadlessException | FileNotFoundException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Info", JOptionPane.ERROR_MESSAGE);
+            //this.pathCargado = "";
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Info", JOptionPane.ERROR_MESSAGE);
+            //this.pathCargado = "";
+        }
     }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        //Obtener Form
+        if (usuarioLog.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "NO HAY USUARIO LOGUEADO, NO PUEDE CREAR FORMULARIO", "ERROR", JOptionPane.ERROR_MESSAGE);
+        } else {
+            String idForm = JOptionPane.showInputDialog(this, "Ingrese el codigo de formulario", "ID FORMULARIO", JOptionPane.OK_CANCEL_OPTION);
+            if (idForm != null && idForm.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "DEBE INGRESAR EL ID", "ERROR", JOptionPane.ERROR_MESSAGE);
+            } else {
+                String respuestas = "";
+                NYCliente5 nyClient = new NYCliente5();
+                respuestas = nyClient.getFormPorId(idForm);
+                if (respuestas.equals("FORMNE")) {
+                    JOptionPane.showMessageDialog(this, "Formulario no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    //Guardar Formulario
+                    try {
+                        JFileChooser fileChooser = new JFileChooser();
+                        fileChooser.setFileSelectionMode(0);
+                        fileChooser.setAcceptAllFileFilterUsed(false);
+                        FileNameExtensionFilter filtroImagen = new FileNameExtensionFilter("FORM", "form");
+                        fileChooser.setFileFilter(filtroImagen);
+                        fileChooser.setDialogTitle("Guardar Formulario");
+                        int seleccion = fileChooser.showOpenDialog(this);
+                        if (seleccion == APPROVE_OPTION) {
+                            String pathFile = fileChooser.getSelectedFile().getPath() + ".form";
+                            //System.out.println(pathFile);
+
+                            File file = new File(pathFile);
+                            if (!file.exists()) {
+                                file.createNewFile();
+                            }
+
+                            BufferedWriter wr = new BufferedWriter(new FileWriter(file));
+                            FileWriter escribirArchivo = new FileWriter(file, true);
+                            BufferedWriter buffer = new BufferedWriter(escribirArchivo);
+                            buffer.write(respuestas);
+                            buffer.newLine();
+                            buffer.close();
+                            wr.close();
+                            escribirArchivo.close();
+//                            this.pathCargado = pathFile;
+//                FileWriter fw = new FileWriter(file);
+//                BufferedWriter bw = new BufferedWriter(fw);
+//                bw.write(this.jTextArea1.getText());
+//                bw.close();
+
+                        }
+
+                    } catch (HeadlessException e) {
+                        JOptionPane.showMessageDialog(this, e.getMessage(), "Info", JOptionPane.ERROR_MESSAGE);
+                    } catch (IOException ex) {
+                        Logger.getLogger(UserEditor.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    JOptionPane.showMessageDialog(this, "Se guardo el formulario correctamente", "Form Guardado", JOptionPane.INFORMATION_MESSAGE);
+                }
+
+            }
+        }
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void obtenerRespuestas(String entrada) {
 
@@ -518,9 +629,10 @@ public class UserEditor extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -528,6 +640,7 @@ public class UserEditor extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

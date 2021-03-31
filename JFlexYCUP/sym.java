@@ -8,81 +8,83 @@ package analizadores;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int DARK = 61;
-  public static final int CREDEN_U = 22;
-  public static final int NUEVO_FORM = 30;
-  public static final int IZQUIERDA = 72;
-  public static final int ELIM_U = 28;
-  public static final int CREAR_U = 26;
-  public static final int PASS = 38;
-  public static final int MOD_FORM = 32;
-  public static final int USUARIO_NUEVO = 40;
-  public static final int CHECK_BOX = 65;
+  public static final int DARK = 63;
+  public static final int CREDEN_U = 23;
+  public static final int NUEVO_FORM = 32;
+  public static final int IZQUIERDA = 74;
+  public static final int ELIM_U = 30;
+  public static final int CREAR_U = 27;
+  public static final int PASS = 40;
+  public static final int MOD_FORM = 34;
+  public static final int USUARIO_NUEVO = 42;
+  public static final int CHECK_BOX = 67;
   public static final int CORCHCUADI = 8;
-  public static final int BLUE = 60;
+  public static final int BLUE = 62;
   public static final int FINSOLS = 18;
-  public static final int TEMA = 45;
-  public static final int CENTRO = 71;
+  public static final int TEMA = 47;
+  public static final int CENTRO = 73;
   public static final int CORCHCUADD = 9;
-  public static final int WHITE = 62;
-  public static final int AGRE_COMP = 33;
-  public static final int OPCIONES = 56;
-  public static final int TITUL = 43;
+  public static final int WHITE = 64;
+  public static final int AGRE_COMP = 35;
+  public static final int OPCIONES = 58;
+  public static final int TITUL = 45;
   public static final int INISOLS = 16;
-  public static final int ELIM_COMP = 34;
-  public static final int FICHERO = 67;
-  public static final int CAMPO_TEXT = 63;
-  public static final int FILAS = 57;
-  public static final int ID2 = 48;
+  public static final int ELIM_COMP = 36;
+  public static final int FICHERO = 69;
+  public static final int CAMPO_TEXT = 65;
+  public static final int FILAS = 59;
+  public static final int ID2 = 50;
   public static final int NOMBREP = 19;
-  public static final int PARAMS_COMP = 24;
-  public static final int CONSULTS = 25;
+  public static final int PARAMS_COMP = 25;
+  public static final int CONSULTS = 26;
   public static final int COMA = 13;
-  public static final int CONSULT = 36;
+  public static final int CONSULT = 38;
   public static final int FINSOL = 17;
-  public static final int USUARIO_ANTI = 39;
-  public static final int CLASE = 51;
+  public static final int USUARIO_ANTI = 41;
+  public static final int CLASE = 53;
   public static final int GUIONM = 11;
-  public static final int NOMBRE = 44;
-  public static final int NOMBRE_CAMPO = 49;
-  public static final int COLUMNAS = 58;
-  public static final int MOD_U = 27;
+  public static final int NOMBRE = 46;
+  public static final int NOMBRE_CAMPO = 51;
+  public static final int COLUMNAS = 60;
+  public static final int MOD_U = 29;
   public static final int GUIONB = 10;
   public static final int MAY = 5;
   public static final int DOLL = 12;
-  public static final int NUEVO_PASS = 41;
-  public static final int ELIM_FORM = 31;
+  public static final int NUEVO_PASS = 43;
+  public static final int ELIM_FORM = 33;
   public static final int CORCHI = 6;
-  public static final int USUARIO = 37;
-  public static final int URL = 59;
+  public static final int USUARIO = 39;
+  public static final int URL = 61;
   public static final int CORCHD = 7;
-  public static final int TEXTO_VIS = 53;
-  public static final int FORM = 50;
+  public static final int TEXTO_VIS = 55;
+  public static final int CONSULTAN = 28;
+  public static final int FORM = 52;
   public static final int EOF = 0;
-  public static final int LOG_U = 29;
-  public static final int REQUE = 55;
-  public static final int FECHA_CREA = 47;
+  public static final int LOG_U = 31;
+  public static final int REQUE = 57;
+  public static final int CONTCONS = 22;
+  public static final int FECHA_CREA = 49;
   public static final int NOMBRE_OPCION = 20;
-  public static final int IMAGEN = 68;
+  public static final int IMAGEN = 70;
   public static final int COMILLASIM = 14;
-  public static final int PARAMS_FORM = 23;
+  public static final int PARAMS_FORM = 24;
   public static final int INISOL = 15;
   public static final int error = 1;
-  public static final int BOTON = 70;
+  public static final int BOTON = 72;
   public static final int EXCL = 3;
-  public static final int JUSTIFICAR = 74;
+  public static final int JUSTIFICAR = 76;
   public static final int ID = 21;
-  public static final int ALINEA = 54;
-  public static final int DERECHA = 73;
+  public static final int ALINEA = 56;
+  public static final int DERECHA = 75;
   public static final int DOSPUNT = 2;
-  public static final int RADIO = 66;
-  public static final int MOD_COMP = 35;
-  public static final int USUARIO_CREA = 46;
-  public static final int COMBO = 69;
-  public static final int INDICE = 52;
-  public static final int AREA_TEXT = 64;
+  public static final int RADIO = 68;
+  public static final int MOD_COMP = 37;
+  public static final int USUARIO_CREA = 48;
+  public static final int COMBO = 71;
+  public static final int INDICE = 54;
+  public static final int AREA_TEXT = 66;
   public static final int MEN = 4;
-  public static final int FECHA_MOD = 42;
+  public static final int FECHA_MOD = 44;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -106,11 +108,13 @@ public class sym {
   "NOMBREP",
   "NOMBRE_OPCION",
   "ID",
+  "CONTCONS",
   "CREDEN_U",
   "PARAMS_FORM",
   "PARAMS_COMP",
   "CONSULTS",
   "CREAR_U",
+  "CONSULTAN",
   "MOD_U",
   "ELIM_U",
   "LOG_U",

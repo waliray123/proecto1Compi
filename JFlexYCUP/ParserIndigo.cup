@@ -69,10 +69,10 @@ parser code {:
 /* Terminals (tokens returned by the scanner). */
 terminal 	DOSPUNT,EXCL,MEN,MAY,CORCHI,CORCHD,CORCHCUADI,CORCHCUADD,GUIONB,GUIONM,DOLL,COMA,COMILLASIM;
 terminal 	INISOL,INISOLS,FINSOL,FINSOLS;
-terminal    String NOMBREP,NOMBRE_OPCION,ID;
+terminal    String NOMBREP,NOMBRE_OPCION,ID,CONTCONS;
 
 terminal    CREDEN_U,PARAMS_FORM,PARAMS_COMP,CONSULTS;
-terminal    CREAR_U;
+terminal    CREAR_U,CONSULTAN;
 terminal    MOD_U,ELIM_U,LOG_U,NUEVO_FORM,ELIM_FORM,MOD_FORM,AGRE_COMP,ELIM_COMP,MOD_COMP,CONSULT;
 
 terminal    USUARIO,PASS,USUARIO_ANTI,USUARIO_NUEVO,NUEVO_PASS,FECHA_MOD;
@@ -89,9 +89,9 @@ terminal    BOTON,CENTRO,IZQUIERDA,DERECHA,JUSTIFICAR;
 /* Non-Terminals (created scanner). */
 non terminal  inicio,inicio2,sig;
 non terminal  sig2,sig3,sig4,sig5,sig6,sig7;
-non terminal  par1,par2,par3,par4,par5,par6,par7,par8;
+non terminal  par1,par2,par3,par4,par5,par6,par7,par8,par9;
 non terminal  parp4,parpp4,parp7;
-non terminal  nomP,nomp2,fin1,fin2,fin4,fin6,fin7,fin8;
+non terminal  nomP,nomp2,nomp3 ,fin1,fin2,fin4,fin6,fin7,fin8,fin9;
 non terminal  np1,np2,np3,np4;
 
 
@@ -127,7 +127,7 @@ sig2 ::=
         |   AGRE_COMP:s  MAY sig6 {:setParam("AGRE_COMP", String.valueOf(sleft),String.valueOf(sright));:} par7 
         |   ELIM_COMP:s  MAY sig6 {:setParam("ELIM_COMP", String.valueOf(sleft),String.valueOf(sright));:} par8 
         |   MOD_COMP:s  MAY sig6 {:setParam("MOD_COMP", String.valueOf(sleft),String.valueOf(sright));:} par7 
-        |   CONSULT:s  MAY sig7 {:setParam("CONSULT", String.valueOf(sleft),String.valueOf(sright));:}
+        |   CONSULT:s  MAY sig7 {:setParam("CONSULT", String.valueOf(sleft),String.valueOf(sright));:} par9
         |   error:e sig2 
         |   error:e fin2 
         |   error:e sig3 
@@ -235,12 +235,20 @@ par8 ::=
         |   error:e fin8
 ;
 
+par9 ::=
+            CONSULTAN nomp3 {: parametroAct.setNombre("CONSULTAN");solicitudAct.setNewParametro(parametroAct);:} fin9
+;
+
 nomP ::=
             DOSPUNT NOMBREP:nom {:parametroAct = new Parametro();parametroAct.setContenido(nom);:}
 ;
 
 nomp2 ::=
             DOSPUNT ID:nom {:parametroAct = new Parametro();parametroAct.setContenido(nom);:}
+;
+
+nomp3 ::=
+            DOSPUNT CONTCONS:nom {:parametroAct = new Parametro();parametroAct.setContenido(nom);:}
 ;
 
 np1 ::=
@@ -299,5 +307,10 @@ fin7 ::=
 
 fin8 ::=
             COMA par8
+        |   CORCHD CORCHCUADD CORCHD sig3
+;
+
+fin9 ::=
+            COMA par9
         |   CORCHD CORCHCUADD CORCHD sig3
 ;

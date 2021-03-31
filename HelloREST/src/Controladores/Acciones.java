@@ -113,7 +113,7 @@ public class Acciones {
                     modComp(solicitud);
                     break;
                 case "CONSULT":
-                    //TODO
+                    consult(solicitud);
                     break;
                 default:
                     break;
@@ -516,6 +516,14 @@ public class Acciones {
         }
     }
 
+    private void consult(Solicitud solicitud){
+        List<Parametro> parametros = solicitud.getParametros();
+        for (Parametro parametro : parametros) {
+            insertarRespuesta("CONSULTAS", "Se consulta: " + parametro.getNombre());
+        }
+        
+    }
+    
     private int getNuevoIndice(List<Componente> componentesForm, int indiceBus) {
         int index = -1;
         List<String> indices = new ArrayList<>();

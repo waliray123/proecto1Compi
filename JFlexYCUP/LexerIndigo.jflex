@@ -43,6 +43,8 @@ credenU = \""CREDENCIALES_USUARIO"\"
 paramsForm = \""PARAMETROS_FORMULARIO"\"
 paramsComp = \""PARAMETROS_COMPONENTE"\"
 consults = \""CONSULTAS"\"
+//consultan = \""CONSULTA-"[0-9]\"
+consultan = \""CONSULTA"\"
 
 //Nombres de Paramentros
 usuarioAnti = \""USUARIO_ANTIGUO"\"
@@ -92,6 +94,7 @@ white = \""WHITE"\"
 id = \"("_"|"$"|"-")[a-z0-9A-Z_|$]+\"
 nombreP = \"[ :/.a-zA-Z0-9_-]+\"
 nombreOpciones = \"[ a-zA-Z0-9|]+\"
+contCons = \"[ $\[\]><=\':/.a-zA-Z0-9_-]+\"
 palabra = [a-zA-Z0-9]+
 blancos = [ \r\t\b\f\n]+
 
@@ -160,6 +163,7 @@ blancos = [ \r\t\b\f\n]+
     {paramsForm} {return new Symbol(sym.PARAMS_FORM,yyline+1,yycolumn+1, yytext());}
     {paramsComp} {return new Symbol(sym.PARAMS_COMP,yyline+1,yycolumn+1, yytext());}
     {consults} {return new Symbol(sym.CONSULTS,yyline+1,yycolumn+1, yytext());}
+    {consultan} {return new Symbol(sym.CONSULTAN,yyline+1,yycolumn+1, yytext());}
     {usuarioAnti} {return new Symbol(sym.USUARIO_ANTI,yyline+1,yycolumn+1, yytext());}
     {usuarioNuev} {return new Symbol(sym.USUARIO_NUEVO,yyline+1,yycolumn+1, yytext());}
     {nuevoPass} {return new Symbol(sym.NUEVO_PASS,yyline+1,yycolumn+1, yytext());}
@@ -201,6 +205,7 @@ blancos = [ \r\t\b\f\n]+
     {id} {return new Symbol(sym.ID,yyline+1,yycolumn+1, yytext());}
     {nombreP} {return new Symbol(sym.NOMBREP,yyline+1,yycolumn+1, yytext());}
     {nombreOpciones} {return new Symbol(sym.NOMBRE_OPCION,yyline+1,yycolumn+1, yytext());}
+    {contCons} {return new Symbol(sym.CONTCONS,yyline+1,yycolumn+1, yytext());}
     ":" {return new Symbol(sym.DOSPUNT,yyline+1,yycolumn+1, yytext());}
     "!" {return new Symbol(sym.EXCL,yyline+1,yycolumn+1, yytext());}
     "<" {return new Symbol(sym.MEN,yyline+1,yycolumn+1, yytext());}

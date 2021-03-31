@@ -80,6 +80,24 @@ public class NYCliente5 {
         return pruebaRetorno;
         //return webTarget.path("prueba").request(javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED).post(Entity.form(form), String.class);
     }
+    
+    public String getFormPorId(String id) throws ClientErrorException {
+        Form form = new Form();
+        form.param("idF", id);        
+        String pruebaRetorno = webTarget.path("getForm").request(MediaType.APPLICATION_JSON)
+                .post(Entity.entity(form,MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class );
+        return pruebaRetorno;
+        //return webTarget.path("prueba").request(javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED).post(Entity.form(form), String.class);
+    }
+    
+    public String cargarForm(String strF) throws ClientErrorException {
+        Form form = new Form();
+        form.param("strForm", strF);        
+        String pruebaRetorno = webTarget.path("cargarForm").request(MediaType.APPLICATION_JSON)
+                .post(Entity.entity(form,MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class );
+        return pruebaRetorno;
+        //return webTarget.path("prueba").request(javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED).post(Entity.form(form), String.class);
+    }
 
     public void close() {
         client.close();

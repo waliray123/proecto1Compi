@@ -5,6 +5,7 @@
  */
 package Servlets;
 
+import Controladores.GuardarFormularios;
 import analizadores.LexerForms;
 import analizadores.ParserForms;
 import java.io.IOException;
@@ -18,8 +19,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
 import objetos.Campo;
 import objetos.Componente;
 import objetos.Formulario;
@@ -86,10 +90,8 @@ public class Servlet1 extends HttpServlet {
         this.paramIdForm = request.getParameter("idForm");
         todosFormularios = getFormulariosServer(paramIdForm);
         obtenerFormularios();
-        obtenerHTML(paramIdForm);        
-        System.out.println(request.getParameter("utiles"));
-        String utiles = request.getParameter("utiles");
-        String cliente = request.getParameter("Cliente");
+        obtenerHTML(paramIdForm);
+        guardarDatos(request);
         System.out.println("");
         processRequest(request, response);
     }
@@ -147,9 +149,9 @@ public class Servlet1 extends HttpServlet {
             if (tema.equals("DARK")) {
                 css = "<link rel=\"stylesheet\"  href=\"/HelloREST/css/bootstrapDark.css\">";
             } else if (tema.equals("BLUE")) {
-                css = "<link rel=\"stylesheet\"  href=\"/HelloREST/css/bootstrapDark.css\">";
+                css = "<link rel=\"stylesheet\"  href=\"/HelloREST/css/bootstrapBlue.css\">";
             } else if (tema.equals("WHITE")) {
-                css = "<link rel=\"stylesheet\"  href=\"/HelloREST/css/bootstrap.css\">";
+                css = "<link rel=\"stylesheet\"  href=\"/HelloREST/css/bootstrapWhite.css\">";
             }
 
             this.htmlStr = "<!DOCTYPE html> \n";
@@ -175,7 +177,7 @@ public class Servlet1 extends HttpServlet {
         List<Componente> componentes = formularioAct.getComponentes();
         componentes = ordenarComponentes(componentes);
         String requerido = "";
-        String opcionesStr ="";
+        String opcionesStr = "";
         String[] opciones = null;
         String idComp = "";
         String nombre = "";
@@ -201,7 +203,7 @@ public class Servlet1 extends HttpServlet {
                         } else {
                             requerido = "";
                         }
-                    }else{
+                    } else {
                         requerido = "";
                     }
                     this.htmlStr += "<div align = \"" + alinea + "\" class=\"mb-3\"> \n";
@@ -219,7 +221,7 @@ public class Servlet1 extends HttpServlet {
                         } else {
                             requerido = "";
                         }
-                    }else{
+                    } else {
                         requerido = "";
                     }
                     String filas = componente.getFilas();
@@ -262,13 +264,13 @@ public class Servlet1 extends HttpServlet {
                         } else {
                             requerido = "";
                         }
-                    }else{
+                    } else {
                         requerido = "";
                     }
                     this.htmlStr += "<div align = \"" + alinea + "\" class=\"mb-3\"> \n";
                     this.htmlStr += "<label for=\"male\" class=\"form-label\">" + componente.getTextoVisible().replace("\"", "") + "</label>\n";
                     this.htmlStr += "<input type=\"file\" id=\"" + componente.getIdComp().replace("\"", "")
-                            + "\" value=\"valor\" name=\"" + componente.getNombre().replace("\"", "") + "\""+ requerido+"/> \n";
+                            + "\" value=\"valor\" name=\"" + componente.getNombre().replace("\"", "") + "\"" + requerido + "/> \n";
                     this.htmlStr += "</div>\n";
                     break;
                 case "RADIO":
@@ -280,7 +282,7 @@ public class Servlet1 extends HttpServlet {
                         } else {
                             requerido = "";
                         }
-                    }else{
+                    } else {
                         requerido = "";
                     }
                     opcionesStr = componente.getOpciones().replace("\"", "");
@@ -291,7 +293,7 @@ public class Servlet1 extends HttpServlet {
                     this.htmlStr += "<label for=\"male\" class=\"form-label\">" + componente.getTextoVisible().replace("\"", "") + "</label>\n";
                     for (int i = 0; i < opciones.length; i++) {
                         String opcion = opciones[i];
-                        this.htmlStr += "<input type=\"radio\" id=\"" + idComp + "\" value=\"" + opcion + "\" name=\"" + nombre + "\""+ requerido+"/>" + opcion + "\n";
+                        this.htmlStr += "<input type=\"radio\" id=\"" + idComp + "\" value=\"" + opcion + "\" name=\"" + nombre + "\"" + requerido + "/>" + opcion + "\n";
                     }
                     this.htmlStr += "</div>\n";
                     break;
@@ -304,7 +306,7 @@ public class Servlet1 extends HttpServlet {
                         } else {
                             requerido = "";
                         }
-                    }else{
+                    } else {
                         requerido = "";
                     }
                     opcionesStr = componente.getOpciones().replace("\"", "");
@@ -328,7 +330,7 @@ public class Servlet1 extends HttpServlet {
                         } else {
                             requerido = "";
                         }
-                    }else{
+                    } else {
                         requerido = "";
                     }
                     opcionesStr = componente.getOpciones().replace("\"", "");
@@ -337,10 +339,10 @@ public class Servlet1 extends HttpServlet {
                     nombre = componente.getNombre().replace("\"", "");
                     this.htmlStr += "<div align = \"" + alinea + "\" class=\"mb-3\"> \n";
                     this.htmlStr += "<label for=\"male\" class=\"form-label\">" + componente.getTextoVisible().replace("\"", "") + "</label>\n";
-                    this.htmlStr += "<select id=\""+idComp+"\" name=\""+nombre+"\""+requerido+" >";
+                    this.htmlStr += "<select id=\"" + idComp + "\" name=\"" + nombre + "\"" + requerido + " >";
                     for (int i = 0; i < opciones.length; i++) {
                         String opcion = opciones[i];
-                        this.htmlStr += "<option>"+opcion+"</option>\n";
+                        this.htmlStr += "<option>" + opcion + "</option>\n";
                     }
                     this.htmlStr += "</select>";
                     this.htmlStr += "</div>\n";
@@ -376,15 +378,65 @@ public class Servlet1 extends HttpServlet {
         opciones = opcionesStr.split("[|]");
         return opciones;
     }
-    
-    private void guardarDatos(HttpServletRequest request){
+
+    private void guardarDatos(HttpServletRequest request) {
         List<Componente> componentes = formularioAct.getComponentes();
-        List<Campo> campos = new ArrayList<>();
-        for (Componente componente : componentes) {
+        List<Campo> campos = formularioAct.getCampos();
+        boolean estaCampo = false;
+        for (Componente componente : componentes) {            
+            estaCampo = false;
             String nombreCamp = componente.getNombre().replace("\"", "");
             String registro = request.getParameter(nombreCamp);
+            if (registro != null && registro.isEmpty() == false) {
+                for (Campo campoF : campos) {
+                    String nombreCampForm = campoF.getNombreCampo().replace("\"", "");
+                    if (nombreCampForm.equals(nombreCamp)) {
+                        campoF.setResgistro(registro);
+                        estaCampo = true;
+                        break;
+                    }
+                }
+                if (estaCampo == false) {
+                    Campo nCampo = new Campo();
+                    nCampo.setNombreCampo(nombreCamp);
+                    nCampo.setResgistro(registro);
+                    formularioAct.setNuevoCampo(nCampo);
+                }
+            }
         }
+        for (Formulario formulario : formularios) {
+            if (formulario.getIdForm().replace("\"", "").equals(this.formularioAct.getIdForm().replace("\"", ""))) {
+                formulario.setCampos(this.formularioAct.getCampos());
+            }
+        }
+        
+        String usuarios = getUsuariosStr("getusers");
+        GuardarFormularios guardarforms = new GuardarFormularios(this.formularios);
+        String formulariosStr = guardarforms.getDbFormularios();
+        String guardado = guardarUsuariosForms(usuarios,formulariosStr);
+        System.out.println("");
+    }
     
+    private String getUsuariosStr(String db){
+        WebTarget resource = webTarget;
+        if (db != null) {
+            resource = resource.queryParam("db", db);
+        }
+        resource = resource.path("prueba");
+        return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
+    }
+    
+    private String guardarUsuariosForms(String strU,String strF){
+        //WebTarget resource = webTarget;
+        Form form = new Form();
+        form.param("strU", strU);
+        form.param("strF", strF);
+        //resource = resource.path("guardarForms");
+        String pruebaRetorno = webTarget.path("guardarForms").request(MediaType.APPLICATION_JSON)
+                .post(Entity.entity(form,MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class );
+        //return pruebaRetorno;
+        
+        return pruebaRetorno;
     }
 
 }

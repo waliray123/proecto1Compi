@@ -40,6 +40,8 @@ opciones = \""OPCIONES"\"
 filas = \""FILAS"\"
 columnas = \""COLUMNAS"\"
 url = \""URL"\"
+datosRecop = \""DATOS_RECOPILADOS"\"
+registr = \""REGISTRO"\"
 
 //NOMBRE DE PARAMETROS ESPECIALES
 campoText = \""CAMPO_TEXT"\"
@@ -113,6 +115,8 @@ blancos = [ \r\t\b\f\n]+
 //Reglas Lexicas
 <YYINITIAL> {
     {inicio} {return new Symbol(symF.INI,yyline+1,yycolumn+1, yytext());}
+    {registr} {return new Symbol(symF.REGISTRO,yyline+1,yycolumn+1, yytext());}
+    {datosRecop} {return new Symbol(symF.DATOS_RECOP,yyline+1,yycolumn+1, yytext());}
     {idForm} {return new Symbol(symF.ID_FORM,yyline+1,yycolumn+1, yytext());}
     {estructura} {return new Symbol(symF.ESTRUCT,yyline+1,yycolumn+1, yytext());}
     {titul} {return new Symbol(symF.TITUL,yyline+1,yycolumn+1, yytext());}

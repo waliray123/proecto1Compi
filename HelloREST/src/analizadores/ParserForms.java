@@ -12,6 +12,7 @@ import objetos.ErrorCom;
 import objetos.Formulario;
 import objetos.Componente;
 import java_cup.runtime.XMLElement;
+import objetos.Campo;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
   */
@@ -291,7 +292,8 @@ public class ParserForms extends java_cup.runtime.lr_parser {
         this.erroresCom = lex.getErroresCom();
         this.formularios = new ArrayList<>();      
         componenteAct = new Componente(); 
-        formularioAct = new Formulario(); 
+        formularioAct = new Formulario();
+        campoAct = new Campo();
 	}
 
     /**
@@ -325,7 +327,7 @@ public class ParserForms extends java_cup.runtime.lr_parser {
 
     private void insertarNuevoCampo(){
         this.campoAct = new Campo();
-        this.formulario.setNuevoCampo(this.campoAct);
+        this.formularioAct.setNuevoCampo(this.campoAct);
     }
 
     public List<Formulario> getFormularios(){
@@ -1023,7 +1025,7 @@ componenteAct.setUrl(String.valueOf(nom));
 		int nomleft = ((java_cup.runtime.Symbol)CUP$ParserForms$stack.peek()).left;
 		int nomright = ((java_cup.runtime.Symbol)CUP$ParserForms$stack.peek()).right;
 		Object nom = (Object)((java_cup.runtime.Symbol) CUP$ParserForms$stack.peek()).value;
-this.campoAct.setNombreCampo(String.valueOf(nom));
+campoAct.setNombreCampo(String.valueOf(nom));
               CUP$ParserForms$result = parser.getSymbolFactory().newSymbol("NT$21",41, ((java_cup.runtime.Symbol)CUP$ParserForms$stack.peek()), RESULT);
             }
           return CUP$ParserForms$result;
@@ -1049,7 +1051,7 @@ this.campoAct.setNombreCampo(String.valueOf(nom));
 		int nomleft = ((java_cup.runtime.Symbol)CUP$ParserForms$stack.peek()).left;
 		int nomright = ((java_cup.runtime.Symbol)CUP$ParserForms$stack.peek()).right;
 		Object nom = (Object)((java_cup.runtime.Symbol) CUP$ParserForms$stack.peek()).value;
-this.campoAct.setResgistro(String.valueOf(nom));
+                campoAct.setResgistro(String.valueOf(nom));
               CUP$ParserForms$result = parser.getSymbolFactory().newSymbol("NT$22",42, ((java_cup.runtime.Symbol)CUP$ParserForms$stack.peek()), RESULT);
             }
           return CUP$ParserForms$result;

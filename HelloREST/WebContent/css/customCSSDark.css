@@ -1,0 +1,53 @@
+
+.form-login {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+}
+
+.formC-1{
+    width:500px;
+    padding:16px;
+    border-radius:10px;
+    margin:auto;
+    background-color:#ccc;
+}
+
+.formC-2{
+    padding:16px;
+    border-radius:10px;
+    margin:auto;
+}
+
+.borderR{
+    border-radius:10px;
+}
+
+.backC-1{
+    background-color:#91c263;
+}
+
+.backC-2{
+    background-color:#b8d89a;
+}
+
+.backC-3{
+    background-color:#90f0dd;
+}
+
+.backC-4{
+    background-color:#b8d89a;
+}
+.backC-5{
+    background-color:#90d2f0;
+}
+
+.areaIcon{
+    width: 25px;
+    height:25px;
+}
+
+.texto-Cus {
+    color: #ffc107;
+}

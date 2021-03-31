@@ -6,14 +6,16 @@ import java.util.List;
 import objetos.ErrorCom;
 import objetos.Formulario;
 import objetos.Componente;
+import objetos.Campo;
 
 parser code {:
 
     private List<ErrorCom> erroresCom;
     private List<Formulario> formularios;
+    private List<String> resgistrosAct;
     private Formulario formularioAct;
     private Componente componenteAct;
-
+    private Campo campoAct;
 
 	public ParserForms(LexerForms lex) {
 		super(lex);
@@ -52,6 +54,11 @@ parser code {:
         this.formularioAct.setNuevoComponente(this.componenteAct);
     }
 
+    private void insertarNuevoCampo(){
+        this.campoAct = new Campo();
+        this.formularioAct.setNuevoCampo(this.campoAct);
+    }
+
     public List<Formulario> getFormularios(){
         return this.formularios;
     }
@@ -62,7 +69,7 @@ terminal 	DOSPUNT,CORCHI,CORCHD,COMA,PARI,PARD,INI;
 terminal    String NOMBREP,NOMBRE_OPCION,ID;
 
 terminal    TITUL,NOMBRE,TEMA,USUARIO_CREA,FECHA_CREA,ID_COMP,NOMBRE_CAMPO,FORM,ID_FORM,ESTRUCT,NOMBRE_COMP;
-terminal    CLASE,INDICE,TEXTO_VIS,ALINEA,REQUE,OPCIONES,FILAS,COLUMNAS,URL;
+terminal    CLASE,INDICE,TEXTO_VIS,ALINEA,REQUE,OPCIONES,FILAS,COLUMNAS,URL,DATOS_RECOP,REGISTRO;
 terminal    BLUE,DARK,WHITE;
 
 terminal    CAMPO_TEXT,AREA_TEXT,CHECK_BOX,RADIO,FICHERO,IMAGEN,COMBO;
@@ -74,7 +81,8 @@ terminal    BOTON,CENTRO,IZQUIERDA,DERECHA,JUSTIFICAR;
 /* Non-Terminals (created scanner). */
 non terminal  inicio,sig,estr;
 non terminal  cont1,cont2,cont3,cont4,cont5,cont6,cont7;
-non terminal  fin1,fin2,form,formp,compon,componp;
+non terminal  fin1,fin2,form,formp,compon,componp,fin3;
+non terminal  datr,datrp,campo;
 
 
 
@@ -106,6 +114,17 @@ componp ::=
         |   PARD
 ;
 
+datr ::=
+            CORCHI {:insertarNuevoCampo();:} campo datrp 
+        |
+;
+
+datrp ::=
+            COMA datr
+        |   PARD
+
+;
+
 sig::=
             ID_FORM cont2:nom {:formularioAct.setIdForm(String.valueOf(nom));:}  fin1
         |   TITUL cont1:nom {:formularioAct.setTitulo(String.valueOf(nom));:} fin1
@@ -114,6 +133,7 @@ sig::=
         |   USUARIO_CREA cont7:nom {:formularioAct.setUsuarioCrea(String.valueOf(nom));:} fin1
         |   FECHA_CREA cont1:nom {:formularioAct.setFechaCrea(String.valueOf(nom));:} fin1
         |   ESTRUCT DOSPUNT PARI compon fin1
+        |   DATOS_RECOP PARI datr fin1
         |   fin1
 ;
 
@@ -132,6 +152,11 @@ estr ::=
         |   URL cont1:nom {:componenteAct.setUrl(String.valueOf(nom));:} fin2
 
         
+;
+
+campo ::=
+            NOMBRE_CAMPO cont7:nom {:campoAct.setNombreCampo(String.valueOf(nom));:} fin3
+        |   REGISTRO cont7:nom {:campoAct.setResgistro(String.valueOf(nom));:} fin3
 ;
 
 cont1 ::=
@@ -184,4 +209,9 @@ fin1 ::=
 fin2 ::=
             COMA estr    
         |   CORCHD    
+;
+
+fin3 ::=
+            COMA campo
+        |   CORCHD
 ;

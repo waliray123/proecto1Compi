@@ -89,9 +89,9 @@ terminal    BOTON,CENTRO,IZQUIERDA,DERECHA,JUSTIFICAR;
 /* Non-Terminals (created scanner). */
 non terminal  inicio,inicio2,sig;
 non terminal  sig2,sig3,sig4,sig5,sig6,sig7;
-non terminal  par1,par2,par3,par4,par5,par6,par7;
+non terminal  par1,par2,par3,par4,par5,par6,par7,par8;
 non terminal  parp4,parpp4,parp7;
-non terminal  nomP,nomp2,fin1,fin2,fin4,fin6,fin7;
+non terminal  nomP,nomp2,fin1,fin2,fin4,fin6,fin7,fin8;
 non terminal  np1,np2,np3,np4;
 
 
@@ -125,9 +125,13 @@ sig2 ::=
         |   ELIM_FORM:s  MAY sig5 {:setParam("ELIM_FORM", String.valueOf(sleft),String.valueOf(sright));:} par5 
         |   MOD_FORM:s  MAY sig5 {:setParam("MOD_FORM", String.valueOf(sleft),String.valueOf(sright));:} par6 
         |   AGRE_COMP:s  MAY sig6 {:setParam("AGRE_COMP", String.valueOf(sleft),String.valueOf(sright));:} par7 
-        |   ELIM_COMP:s  MAY sig6 {:setParam("ELIM_COMP", String.valueOf(sleft),String.valueOf(sright));:} par5 
+        |   ELIM_COMP:s  MAY sig6 {:setParam("ELIM_COMP", String.valueOf(sleft),String.valueOf(sright));:} par8 
         |   MOD_COMP:s  MAY sig6 {:setParam("MOD_COMP", String.valueOf(sleft),String.valueOf(sright));:} par7 
         |   CONSULT:s  MAY sig7 {:setParam("CONSULT", String.valueOf(sleft),String.valueOf(sright));:}
+        |   error:e sig2 
+        |   error:e fin2 
+        |   error:e sig3 
+        |   error:e
 ;
 
 sig3 ::=
@@ -162,10 +166,13 @@ par2 ::=
         |   USUARIO_NUEVO nomP:nom {: parametroAct.setNombre("USUARIO_NUEVO");solicitudAct.setNewParametro(parametroAct);:} fin2
         |   NUEVO_PASS nomP:nom {: parametroAct.setNombre("NUEVO_PASS");solicitudAct.setNewParametro(parametroAct);:} fin2
         |   FECHA_MOD nomP:nom {: parametroAct.setNombre("FECHA_MOD");solicitudAct.setNewParametro(parametroAct);:} fin2
+        |   error:e par2
+        |   error:e fin2
 ;
 
 par3 ::=
             USUARIO  nomP {: parametroAct.setNombre("USUARIO");solicitudAct.setNewParametro(parametroAct);:} CORCHD CORCHCUADD CORCHD sig3
+            |   error:e sig3
 ;
 
 par4 ::=
@@ -174,6 +181,8 @@ par4 ::=
         |   TEMA np4 {: parametroAct.setNombre("TEMA");solicitudAct.setNewParametro(parametroAct);:} fin4
         |   USUARIO_CREA nomp2 {: parametroAct.setNombre("USUARIO_CREA");solicitudAct.setNewParametro(parametroAct);:} fin4
         |   FECHA_CREA nomP {: parametroAct.setNombre("FECHA_CREA");solicitudAct.setNewParametro(parametroAct);:} fin4
+        |   error:e par4 
+        |   error:e fin4
 ;
 
 parp4 ::=
@@ -187,12 +196,15 @@ parpp4 ::=
 
 par5 ::=        
             ID2 nomp2 {: parametroAct.setNombre("ID");solicitudAct.setNewParametro(parametroAct);:} CORCHD CORCHCUADD CORCHD sig3
+        |   error:e sig3
 ;
 
 par6 ::=
             parpp4:par nomP {: parametroAct.setNombre(String.valueOf(par));solicitudAct.setNewParametro(parametroAct);:} fin6
         |   TEMA np4 {: parametroAct.setNombre("TEMA");solicitudAct.setNewParametro(parametroAct);:} fin6
         |   ID2 nomp2 {: parametroAct.setNombre("ID");solicitudAct.setNewParametro(parametroAct);:} fin6
+        |   error:e par6
+        |   error:e fin6
 ;
 
 par7 ::=
@@ -202,6 +214,8 @@ par7 ::=
         |   OPCIONES np3 {: parametroAct.setNombre("OPCIONES");solicitudAct.setNewParametro(parametroAct);:} fin7
         |   ID2 nomp2 {: parametroAct.setNombre("ID");solicitudAct.setNewParametro(parametroAct);:} fin7
         |   FORM nomp2 {: parametroAct.setNombre("FORM");solicitudAct.setNewParametro(parametroAct);:} fin7
+        |   error:e par7 
+        |   error:e fin7
 ;
 
 parp7 ::=
@@ -212,6 +226,13 @@ parp7 ::=
         |   FILAS {: RESULT = "FILAS"; :}
         |   COLUMNAS {: RESULT = "COLUMNAS"; :}
         |   URL {: RESULT = "URL"; :}
+;
+
+par8 ::=
+            ID2 nomp2 {: parametroAct.setNombre("ID");solicitudAct.setNewParametro(parametroAct);:} fin8
+        |   FORM nomp2 {: parametroAct.setNombre("FORM");solicitudAct.setNewParametro(parametroAct);:} fin8
+        |   error:e par8
+        |   error:e fin8
 ;
 
 nomP ::=
@@ -273,5 +294,10 @@ fin6 ::=
 
 fin7 ::=
             COMA par7
+        |   CORCHD CORCHCUADD CORCHD sig3
+;
+
+fin8 ::=
+            COMA par8
         |   CORCHD CORCHCUADD CORCHD sig3
 ;

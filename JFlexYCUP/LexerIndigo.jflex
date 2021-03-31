@@ -90,7 +90,7 @@ dark = \""DARK"\"
 white = \""WHITE"\"
 
 id = \"("_"|"$"|"-")[a-z0-9A-Z_|$]+\"
-nombreP = \"[ :a-zA-Z0-9_-]+\"
+nombreP = \"[ :/.a-zA-Z0-9_-]+\"
 nombreOpciones = \"[ a-zA-Z0-9|]+\"
 palabra = [a-zA-Z0-9]+
 blancos = [ \r\t\b\f\n]+

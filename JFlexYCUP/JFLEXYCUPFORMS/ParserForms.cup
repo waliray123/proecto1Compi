@@ -73,7 +73,7 @@ terminal    BOTON,CENTRO,IZQUIERDA,DERECHA,JUSTIFICAR;
 
 /* Non-Terminals (created scanner). */
 non terminal  inicio,sig,estr;
-non terminal  cont1,cont2,cont3,cont4,cont5,cont6;
+non terminal  cont1,cont2,cont3,cont4,cont5,cont6,cont7;
 non terminal  fin1,fin2,form,formp,compon,componp;
 
 
@@ -111,7 +111,7 @@ sig::=
         |   TITUL cont1:nom {:formularioAct.setTitulo(String.valueOf(nom));:} fin1
         |   NOMBRE cont1:nom {:formularioAct.setNombre(String.valueOf(nom));:} fin1
         |   TEMA cont6:nom {:formularioAct.setTema(String.valueOf(nom));:} fin1
-        |   USUARIO_CREA cont2:nom {:formularioAct.setUsuarioCrea(String.valueOf(nom));:} fin1
+        |   USUARIO_CREA cont7:nom {:formularioAct.setUsuarioCrea(String.valueOf(nom));:} fin1
         |   FECHA_CREA cont1:nom {:formularioAct.setFechaCrea(String.valueOf(nom));:} fin1
         |   ESTRUCT DOSPUNT PARI compon fin1
         |   fin1
@@ -169,6 +169,11 @@ cont6 ::=
             DOSPUNT DARK {:RESULT = "DARK";:}
         |   DOSPUNT BLUE {:RESULT = "BLUE";:}
         |   DOSPUNT WHITE {:RESULT = "WHITE";:}
+;
+
+cont7 ::=
+            DOSPUNT ID:nom {:RESULT = nom;:}
+        |   cont1:nom {:RESULT = String.valueOf(nom);:}
 ;
 
 fin1 ::=

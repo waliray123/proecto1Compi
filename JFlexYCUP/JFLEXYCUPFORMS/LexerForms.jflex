@@ -42,9 +42,9 @@ columnas = \""COLUMNAS"\"
 url = \""URL"\"
 
 //NOMBRE DE PARAMETROS ESPECIALES
-campoText = \""CAMPO_TEXTO"\"
-areaText = \""AREA_TEXTO"\"
-checkBox = \""CHECKBOX"\"
+campoText = \""CAMPO_TEXT"\"
+areaText = \""AREA_TEXT"\"
+checkBox = \""CHECK_BOX"\"
 radioB = \""RADIO"\"
 fichero = \""FICHERO"\"
 imagen = \""IMAGEN"\"
@@ -61,7 +61,7 @@ dark = \""DARK"\"
 white = \""WHITE"\"
 
 id = \"("_"|"$"|"-")[a-z0-9A-Z_|$]+\"
-nombreP = \"[ :a-zA-Z0-9_-]+\"
+nombreP = \"[ :./a-zA-Z0-9_-]+\"
 nombreOpciones = \"[ a-zA-Z0-9|]+\"
 palabra = [a-zA-Z0-9]+
 blancos = [ \r\t\b\f\n]+

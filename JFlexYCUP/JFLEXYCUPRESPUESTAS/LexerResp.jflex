@@ -36,7 +36,7 @@ col = \""COLUMNA"\"
 lex = \""LEXEMA"\"
 logU = \""LOG_U"\"
 
-contenido = \"[ :|$)(!&,.a-zA-Z0-9_-]+\"
+contenido = \"[ :|$)/(!&,.a-zA-Z0-9_-]+\"
 palabra = [a-zA-Z0-9]+
 blancos = [ \r\t\b\f\n]+
 

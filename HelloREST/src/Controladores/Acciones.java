@@ -5,14 +5,18 @@
  */
 package Controladores;
 
+import Generadores.GenConsultForm;
+import analizadores.LexerCons;
 import analizadores.LexerForms;
 import analizadores.LexerUsers;
+import analizadores.ParserCons;
 import analizadores.ParserForms;
 import analizadores.ParserUsers;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import objetos.Componente;
+import objetos.Consulta;
 import objetos.ErrorCom;
 import objetos.Formulario;
 import objetos.Parametro;
@@ -516,14 +520,56 @@ public class Acciones {
         }
     }
 
-    private void consult(Solicitud solicitud){
+    private void consult(Solicitud solicitud) {
+        String strRespuesta = "";
         List<Parametro> parametros = solicitud.getParametros();
-        for (Parametro parametro : parametros) {
-            insertarRespuesta("CONSULTAS", "Se consulta: " + parametro.getNombre());
+        for (Parametro parametro : parametros) {            
+            //Obtener consulta
+            Consulta consulta = null;
+            String strCons = parametro.getContenido().replace("\"", "");
+            StringReader reader = new StringReader(strCons);
+            LexerCons lexico = new LexerCons(reader);
+            ParserCons parser = new ParserCons(lexico);
+            List<ErrorCom> errores;
+            try {
+                parser.parse();
+                consulta = parser.getConsulta();
+                errores = parser.getErroresCom();
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }       
+            if (consulta == null) {
+                insertarError("LA CONSULTA NO SE PUDO REALIZAR");
+            }else{
+                Formulario formCons = null;
+                for (Formulario formulario : todosFormularios) {
+                    if (formulario.getIdForm().replace("\"", "").equals(consulta.getIdFormulario())) {
+                        formCons = formulario;
+                    }
+                }
+                if (formCons == null) {
+                    insertarError("LA CONSULTA NO SE PUDO REALIZAR DEBIDO A QUE"
+                            + "EL FORMULARIO: " + consulta.getIdFormulario() + " NO EXISTE");
+                }else{
+                    Formulario formEdit = new Formulario();                    
+                    List<String> parametrosMostrar = consulta.getParametrosMostrar();
+                    if (parametrosMostrar.size()==0) {
+                        formEdit = formCons;
+                        GenConsultForm genStrCons = new GenConsultForm(formEdit,formEdit.getCampos());
+                        strRespuesta = genStrCons.getFormsStr();
+                    }else{
+                        //Recoger parametros y agregarlos al formedit
+                        
+                        
+                    }
+                    
+                }
+                insertarRespuesta("CONSULTAS", strRespuesta);
+            }            
         }
-        
+
     }
-    
+
     private int getNuevoIndice(List<Componente> componentesForm, int indiceBus) {
         int index = -1;
         List<String> indices = new ArrayList<>();

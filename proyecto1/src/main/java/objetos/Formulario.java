@@ -5,6 +5,7 @@
  */
 package objetos;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author user-ubunto
  */
-public class Formulario {
+public class Formulario implements Serializable{
     private String idForm;
     private String titulo;
     private String nombre;
@@ -20,6 +21,7 @@ public class Formulario {
     private String usuarioCrea;
     private String fechaCrea;
     private List<Componente> componentes;
+    private List<Campo> campos;
 
 //    public Formulario(String idForm, String titulo, String nombre, String tema, String usuarioCrea, String fechaCrea) {
 //        this.idForm = idForm;
@@ -33,9 +35,16 @@ public class Formulario {
 
     public Formulario() {
         this.componentes = new ArrayList<>();
+        this.campos = new ArrayList<>();
     }
-    
-    
+
+    public List<Campo> getCampos() {
+        return campos;
+    }
+
+    public void setCampos(List<Campo> campos) {
+        this.campos = campos;
+    }        
 
     public String getIdForm() {
         return idForm;
@@ -99,5 +108,9 @@ public class Formulario {
     
     public void elimComponente(int index){
         this.componentes.remove(index);
+    }
+    
+    public void setNuevoCampo(Campo campo){
+        this.campos.add(campo);
     }
 }

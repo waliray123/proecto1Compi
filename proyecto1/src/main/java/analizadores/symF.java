@@ -8,25 +8,26 @@ package analizadores;
 /** CUP generated class containing symbol constants. */
 public class symF {
   /* terminals */
+  public static final int REGISTRO = 33;
   public static final int FORM = 19;
-  public static final int BOTON = 42;
+  public static final int BOTON = 44;
   public static final int REQUE = 27;
-  public static final int CHECK_BOX = 37;
+  public static final int CHECK_BOX = 39;
   public static final int ESTRUCT = 21;
   public static final int NOMBRE = 13;
   public static final int NOMBREP = 9;
-  public static final int WHITE = 34;
-  public static final int IZQUIERDA = 44;
+  public static final int WHITE = 36;
+  public static final int IZQUIERDA = 46;
   public static final int INDICE = 24;
   public static final int ID_FORM = 20;
   public static final int INI = 8;
-  public static final int CENTRO = 43;
+  public static final int CENTRO = 45;
   public static final int NOMBRE_OPCION = 10;
   public static final int ID = 11;
   public static final int ALINEA = 26;
-  public static final int FICHERO = 39;
+  public static final int FICHERO = 41;
   public static final int TEXTO_VIS = 25;
-  public static final int CAMPO_TEXT = 35;
+  public static final int CAMPO_TEXT = 37;
   public static final int EOF = 0;
   public static final int CLASE = 23;
   public static final int error = 1;
@@ -39,20 +40,21 @@ public class symF {
   public static final int ID_COMP = 17;
   public static final int TEMA = 14;
   public static final int FECHA_CREA = 16;
-  public static final int RADIO = 38;
+  public static final int RADIO = 40;
   public static final int TITUL = 12;
-  public static final int AREA_TEXT = 36;
-  public static final int DERECHA = 45;
-  public static final int IMAGEN = 40;
+  public static final int AREA_TEXT = 38;
+  public static final int DERECHA = 47;
+  public static final int IMAGEN = 42;
   public static final int NOMBRE_CAMPO = 18;
   public static final int PARI = 6;
-  public static final int COMBO = 41;
-  public static final int BLUE = 32;
-  public static final int DARK = 33;
+  public static final int COMBO = 43;
+  public static final int BLUE = 34;
+  public static final int DARK = 35;
   public static final int PARD = 7;
   public static final int DOSPUNT = 2;
   public static final int COLUMNAS = 30;
-  public static final int JUSTIFICAR = 46;
+  public static final int DATOS_RECOP = 32;
+  public static final int JUSTIFICAR = 48;
   public static final int FILAS = 29;
   public static final int OPCIONES = 28;
   public static final String[] terminalNames = new String[] {
@@ -88,6 +90,8 @@ public class symF {
   "FILAS",
   "COLUMNAS",
   "URL",
+  "DATOS_RECOP",
+  "REGISTRO",
   "BLUE",
   "DARK",
   "WHITE",

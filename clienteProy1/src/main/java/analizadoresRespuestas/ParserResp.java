@@ -9,10 +9,8 @@ import java_cup.runtime.*;
 import java.util.ArrayList;
 import java.util.List;
 import objetos.ErrorCom;
-import objetos.Formulario;
-import objetos.Componente;
-import java_cup.runtime.XMLElement;
 import objetos.Respuesta;
+import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
   */
@@ -179,8 +177,8 @@ public class ParserResp extends java_cup.runtime.lr_parser {
 		super(lex);
         this.erroresCom = lex.getErroresCom();
         this.respuestas = new ArrayList<>();      
-        this.errorAct = new ErrorCom(null,null,null,null,null);
-        this.respuestaAct = new Respuesta(null,null);
+        errorAct = new ErrorCom(null,null,null,null,null); 
+        respuestaAct = new Respuesta(null,null); 
 	}
 
     /**

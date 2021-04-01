@@ -37,8 +37,8 @@ public class GuardarFormularios {
             dbFormularios += "\n\"TITULO\" : " + formulario.getTitulo() + " ,";
             dbFormularios += "\n\"NOMBRE\" : " + formulario.getNombre() + " ,";
             dbFormularios += "\n\"TEMA\" : " + "\"" + formulario.getTema() + "\"" + " ,";
-            dbFormularios += "\n\"USUARIO_CREACION\" : " + "\"" + formulario.getUsuarioCrea() + "\"" + " ,";
-            dbFormularios += "\n\"FECHA_CREACION\" : " + "\"" + formulario.getFechaCrea() + "\"";
+            dbFormularios += "\n\"USUARIO_CREACION\" : " + "\"" + formulario.getUsuarioCrea().replace("\"", "") + "\"" + " ,";
+            dbFormularios += "\n\"FECHA_CREACION\" : " + "\"" + formulario.getFechaCrea().replace("\"", "") + "\"";
             List<Componente> componentes = formulario.getComponentes();
             if (componentes.size() > 0) {
                 dbFormularios += " ,";
@@ -95,7 +95,7 @@ public class GuardarFormularios {
                     List<String> registros = campo.getRegistros();
                     for (String registro : registros) {
                         dbFormularios += " ,";
-                        dbFormularios += "\n\"REGISTRO\" : " +"\"" + registro +"\"";
+                        dbFormularios += "\n\"REGISTRO\" : " +"\"" + registro.replace("\"", "") +"\"";
                     }
                     dbFormularios += "\n}";
                     contCampo++;

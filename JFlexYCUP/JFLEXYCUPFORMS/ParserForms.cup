@@ -133,7 +133,7 @@ sig::=
         |   USUARIO_CREA cont7:nom {:formularioAct.setUsuarioCrea(String.valueOf(nom));:} fin1
         |   FECHA_CREA cont1:nom {:formularioAct.setFechaCrea(String.valueOf(nom));:} fin1
         |   ESTRUCT DOSPUNT PARI compon fin1
-        |   DATOS_RECOP PARI datr fin1
+        |   DATOS_RECOP DOSPUNT PARI datr fin1
         |   fin1
 ;
 

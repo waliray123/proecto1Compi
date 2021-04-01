@@ -1,0 +1,118 @@
+package analizadores;
+
+import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.List;
+import objetos.ErrorCom;
+import objetos.Solicitud;
+import objetos.Parametro;
+import objetos.Consulta;
+import objetos.ParamComp;
+
+parser code {:
+
+    private List<ErrorCom> erroresCom;
+    private Consulta consultaAct;    
+    private ParamComp paramCompAct;
+
+	public ParserCons(LexerCons lex) {
+		super(lex);
+        this.erroresCom = lex.getErroresCom();
+        this.consultaAct = new Consulta();
+        this.paramCompAct = new ParamComp();
+	}
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/ 
+    public void syntax_error(Symbol s){ 
+        erroresCom.add(new ErrorCom("Sintactico","No se esperaba Componente",String.valueOf(s.left),String.valueOf(s.right),String.valueOf(s.value)));
+    } 
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintáctico 
+     * en el que ya no es posible una recuperación de errores.
+     **/ 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        erroresCom.add(new ErrorCom("Sintactico","Error sintactico Irrecuperable",String.valueOf(s.left),String.valueOf(s.right),String.valueOf(s.value)));
+    }
+
+    private void setNuevoParamComp(){
+        this.paramCompAct = new ParamComp();
+        this.consultaAct.setNuevoParametroComp(this.paramCompAct);
+    }
+
+    protected int error_sync_size() {
+		return 2;
+	}
+
+    public Consulta getConsulta(){
+        return consultaAct;
+    }
+
+    public List<ErrorCom> getErroresCom(){
+        return this.erroresCom;
+    }
+    
+:}
+
+/* Terminals (tokens returned by the scanner). */
+terminal 	FLECHA,DESIG,MENIG,MAYIG,MEN,MAY,IGUAL,CORCHCUADI,CORCHCUADD,COMA;
+terminal    SELECTT,WHERE,AND,OR,NOT,TO,FORM;
+terminal    String NUM,ID,CADENA,PARAM;
+
+
+
+
+/* Non-Terminals (created scanner). */
+non terminal  inicio,paramMostr,paramMostrp,sig,paramRel,conectorL;
+non terminal  cad,sig2;
+
+
+/* The grammar : */
+
+start with inicio;
+
+inicio ::= 
+            SELECTT FLECHA ID:idF {:consultaAct.setIdFormulario(idF);:} CORCHCUADI paramMostr CORCHCUADD sig
+;
+
+paramMostr ::=
+            PARAM:parM {:consultaAct.setNuevoParametroMostrar(parM);:} paramMostrp 
+        |      
+;
+
+paramMostrp ::=
+            COMA paramMostr
+        |
+;
+
+sig ::=
+            WHERE CORCHCUADI paramRel CORCHCUADD
+        |
+;
+
+paramRel ::=
+            PARAM:parC {:setNuevoParamComp();paramCompAct.setNombreParametro(parC);:} conectorL cad sig2
+;
+
+sig2 ::=
+            AND {:consultaAct.setNuevoConectorRelacional("AND");:}  paramRel
+        |   NOT {:consultaAct.setNuevoConectorRelacional("NOT");:} paramRel
+        |   OR {:consultaAct.setNuevoConectorRelacional("OR");:} paramRel
+        |
+;
+
+cad ::=
+            NUM:nom {:paramCompAct.setValorBuscar(nom);:}
+        |   CADENA:nom {:paramCompAct.setValorBuscar(nom);:}
+;
+
+conectorL ::=
+            IGUAL {:paramCompAct.setOperadorLogico("IGUAL");:}
+        |   DESIG {:paramCompAct.setOperadorLogico("DESIG");:}
+        |   MAYIG {:paramCompAct.setOperadorLogico("MAYIG");:}
+        |   MENIG {:paramCompAct.setOperadorLogico("MENIG");:}
+        |   MAY {:paramCompAct.setOperadorLogico("MAY");:}
+        |   MEN {:paramCompAct.setOperadorLogico("MEN");:}
+;

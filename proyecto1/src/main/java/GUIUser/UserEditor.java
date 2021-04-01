@@ -9,7 +9,9 @@ import Controladores.Acciones;
 import Generadores.GenRespuestas;
 import Generadores.GenStrErrors;
 import GeneradoresRespuestas.GenStrResp;
+import analizadores.LexerForms;
 import analizadores.LexerIndigo;
+import analizadores.ParserForms;
 import analizadores.ParserIndigo;
 import analizadoresRespuestas.LexerResp;
 import analizadoresRespuestas.ParserResp;
@@ -21,6 +23,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,8 +34,10 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
+import objetos.Campo;
 import objetos.ControlSemantico;
 import objetos.ErrorCom;
+import objetos.Formulario;
 import objetos.Respuesta;
 import objetos.Solicitud;
 import objetos.UsuariosFormularios;
@@ -56,12 +61,12 @@ public class UserEditor extends javax.swing.JFrame {
      */
     public UserEditor() {
         initComponents();
-        
+
         //Se crea una db de usuarios 
         this.dbUsuariosForms = new UsuariosFormularios();
         this.usuarioLog = "";
         this.jLabel6.setText(usuarioLog);
-        
+
         this.pathCargado = "";
         this.jTextArea1.addCaretListener(new CaretListener() {
             public void caretUpdate(CaretEvent e) {
@@ -367,30 +372,51 @@ public class UserEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu2ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-    
+
+//        String entrada = this.jTextArea1.getText();
+//        String respuestas = compilar(entrada);
+//        obtenerRespuestas(respuestas);
+//                
+//        GenStrResp genStrResp = new GenStrResp(this.erroresAcciones,this.respuestasAcciones);
+//        String resp2 = genStrResp.getResp();
+//        String logUResp =genStrResp.getLogU().replace("\"", "");
+//        if (logUResp.isEmpty() == false) {
+//            this.usuarioLog = logUResp;
+//        }        
+//        this.jLabel6.setText(usuarioLog);
+//        ReporteRespuestas repResp = new ReporteRespuestas(resp2);
+//        repResp.setVisible(true);
+        
         String entrada = this.jTextArea1.getText();
-        String respuestas = compilar(entrada);
-        obtenerRespuestas(respuestas);
-                
-        GenStrResp genStrResp = new GenStrResp(this.erroresAcciones,this.respuestasAcciones);
-        String resp2 = genStrResp.getResp();
-        String logUResp =genStrResp.getLogU().replace("\"", "");
-        if (logUResp.isEmpty() == false) {
-            this.usuarioLog = logUResp;
-        }        
-        this.jLabel6.setText(usuarioLog);
-        ReporteRespuestas repResp = new ReporteRespuestas(resp2);
-        repResp.setVisible(true);
-        
-        
+        StringReader reader = new StringReader(entrada);
+        LexerForms lexico = new LexerForms(reader);
+        ParserForms parser = new ParserForms(lexico);
+        List<Formulario> formularios = new ArrayList<>();
+        try {
+            parser.parse();
+            formularios = parser.getFormularios();
+            System.out.println("");
+        } catch (Exception ex) {
+
+        }
+        for (Formulario formulario : formularios) {
+            List<Campo> campos = formulario.getCampos();
+            for (Campo campo : campos) {
+                System.out.println("CAMPO: " + campo.getNombreCampo());
+                List<String> registros = campo.getRegistros();
+                for (String registro : registros) {
+                    System.out.println("Registro: " + registro);
+                }
+            }
+        }
+
         //System.out.println("");
         //JOptionPane.showMessageDialog(this, "Compilacion terminada", "Info", JOptionPane.INFORMATION_MESSAGE);
         //System.out.println("Se termino de validar");
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
-    private void obtenerRespuestas(String entrada){
-        
-        
+    private void obtenerRespuestas(String entrada) {
+
         StringReader reader = new StringReader(entrada);
         LexerResp lexico = new LexerResp(reader);
         ParserResp parser = new ParserResp(lexico);
@@ -404,15 +430,15 @@ public class UserEditor extends javax.swing.JFrame {
 //            System.out.println("Causa: " + ex.getCause());
 //            System.out.println("Causa2: " + ex.toString());
         }
-        
+
     }
-    
+
     private void setLineaYColumna() {
         this.jLabel3.setText(String.valueOf(lin));
         this.jLabel4.setText(String.valueOf(col));
     }
-    
-    private String compilar(String entrada){
+
+    private String compilar(String entrada) {
         String respuestas = "";
         StringReader reader = new StringReader(entrada);
         LexerIndigo lexico = new LexerIndigo(reader);
@@ -421,35 +447,35 @@ public class UserEditor extends javax.swing.JFrame {
         try {
             parser.parse();
         } catch (Exception ex) {
-           // System.out.println("Causa: " + ex.getCause());
-           // System.out.println("Causa2: " + ex.toString());
+            // System.out.println("Causa: " + ex.getCause());
+            // System.out.println("Causa2: " + ex.toString());
         }
         List<ErrorCom> errores = parser.getErroresCom();
         List<Solicitud> solicitudes = parser.getSolicitudes();
         //Llamar control semantico
-        ControlSemantico controlSemantico = new ControlSemantico(solicitudes, errores,usuarioLog);
-        errores = controlSemantico.getErrores(); 
-        
+        ControlSemantico controlSemantico = new ControlSemantico(solicitudes, errores, usuarioLog);
+        errores = controlSemantico.getErrores();
+
         if (errores.isEmpty()) {
-            
+
             solicitudes = controlSemantico.getSolicitudes();
-            Acciones acciones = new Acciones(solicitudes,this.dbUsuariosForms);
+            Acciones acciones = new Acciones(solicitudes, this.dbUsuariosForms);
             String usuarios = acciones.getUsuarios();
-            String formularios = acciones.getFormularios();            
+            String formularios = acciones.getFormularios();
             this.dbUsuariosForms.setUsuarios(usuarios);
-            this.dbUsuariosForms.setFormularios(formularios);            
+            this.dbUsuariosForms.setFormularios(formularios);
             System.out.println("USUARIOS");
             System.out.println(this.dbUsuariosForms.getUsuarios());
             System.out.println("\nFORMULARIOS");
             System.out.println(this.dbUsuariosForms.getFormularios());
-            
+
             //Generar Respuestas
             List<ErrorCom> erroresAcciones1 = acciones.getErroresAcciones();
             List<Respuesta> respuestasAcciones1 = acciones.getRespuestasAcciones();
             if (erroresAcciones1.size() > 0) {
                 GenStrErrors genStrErrors = new GenStrErrors(erroresAcciones1);
                 respuestas = genStrErrors.getErroresStr();
-            }else{
+            } else {
                 GenRespuestas genResp = new GenRespuestas(respuestasAcciones1);
                 respuestas = genResp.getRespuestasStr();
             }

@@ -38,15 +38,15 @@ public class ParserCons extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\033\000\002\002\004\000\002\012\002\000\002\002" +
+    "\000\034\000\002\002\004\000\002\012\002\000\002\002" +
     "\012\000\002\013\002\000\002\003\005\000\002\003\002" +
     "\000\002\004\004\000\002\004\002\000\002\005\006\000" +
     "\002\005\002\000\002\014\002\000\002\006\007\000\002" +
     "\015\002\000\002\011\005\000\002\016\002\000\002\011" +
     "\005\000\002\017\002\000\002\011\005\000\002\011\002" +
-    "\000\002\010\003\000\002\010\003\000\002\007\003\000" +
+    "\000\002\010\003\000\002\010\003\000\002\010\003\000" +
     "\002\007\003\000\002\007\003\000\002\007\003\000\002" +
-    "\007\003\000\002\007\003" });
+    "\007\003\000\002\007\003\000\002\007\003" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -54,7 +54,7 @@ public class ParserCons extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\052\000\004\016\004\001\002\000\004\004\007\001" +
+    "\000\053\000\004\016\004\001\002\000\004\004\007\001" +
     "\002\000\004\002\006\001\002\000\004\002\001\001\002" +
     "\000\004\026\010\001\002\000\004\013\000\001\002\000" +
     "\004\013\012\001\002\000\006\014\ufffc\030\014\001\002" +
@@ -63,16 +63,18 @@ public class ParserCons extends java_cup.runtime.lr_parser {
     "\030\014\001\002\000\004\014\ufffd\001\002\000\004\014" +
     "\ufffb\001\002\000\006\002\ufff8\017\022\001\002\000\004" +
     "\013\024\001\002\000\004\002\uffff\001\002\000\004\030" +
-    "\026\001\002\000\004\014\054\001\002\000\016\005\ufff7" +
+    "\026\001\002\000\004\014\055\001\002\000\016\005\ufff7" +
     "\006\ufff7\007\ufff7\010\ufff7\011\ufff7\012\ufff7\001\002\000" +
-    "\016\005\036\006\033\007\035\010\031\011\034\012\032" +
-    "\001\002\000\006\025\037\027\041\001\002\000\006\025" +
-    "\uffe7\027\uffe7\001\002\000\006\025\uffec\027\uffec\001\002" +
-    "\000\006\025\uffe9\027\uffe9\001\002\000\006\025\uffe8\027" +
-    "\uffe8\001\002\000\006\025\uffea\027\uffea\001\002\000\006" +
-    "\025\uffeb\027\uffeb\001\002\000\012\014\uffee\020\uffee\021" +
-    "\uffee\022\uffee\001\002\000\012\014\uffef\020\043\021\045" +
-    "\022\042\001\002\000\012\014\uffed\020\uffed\021\uffed\022" +
+    "\016\005\036\006\033\007\035\010\032\011\034\012\031" +
+    "\001\002\000\010\025\037\027\042\030\041\001\002\000" +
+    "\010\025\uffeb\027\uffeb\030\uffeb\001\002\000\010\025\uffe6" +
+    "\027\uffe6\030\uffe6\001\002\000\010\025\uffe8\027\uffe8\030" +
+    "\uffe8\001\002\000\010\025\uffe7\027\uffe7\030\uffe7\001\002" +
+    "\000\010\025\uffe9\027\uffe9\030\uffe9\001\002\000\010\025" +
+    "\uffea\027\uffea\030\uffea\001\002\000\012\014\uffee\020\uffee" +
+    "\021\uffee\022\uffee\001\002\000\012\014\uffef\020\044\021" +
+    "\046\022\043\001\002\000\012\014\uffec\020\uffec\021\uffec" +
+    "\022\uffec\001\002\000\012\014\uffed\020\uffed\021\uffed\022" +
     "\uffed\001\002\000\004\030\ufff3\001\002\000\004\030\ufff5" +
     "\001\002\000\004\014\ufff6\001\002\000\004\030\ufff1\001" +
     "\002\000\004\030\026\001\002\000\004\014\ufff0\001\002" +
@@ -86,7 +88,7 @@ public class ParserCons extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\052\000\004\002\004\001\001\000\002\001\001\000" +
+    "\000\053\000\004\002\004\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\004" +
     "\012\010\001\001\000\002\001\001\000\004\003\012\001" +
     "\001\000\002\001\001\000\004\013\014\001\001\000\004" +
@@ -97,11 +99,12 @@ public class ParserCons extends java_cup.runtime.lr_parser {
     "\001\001\000\004\010\037\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
     "\001\001\000\002\001\001\000\002\001\001\000\004\011" +
-    "\043\001\001\000\002\001\001\000\004\016\051\001\001" +
-    "\000\004\015\047\001\001\000\002\001\001\000\004\017" +
-    "\045\001\001\000\004\006\046\001\001\000\002\001\001" +
-    "\000\004\006\050\001\001\000\002\001\001\000\004\006" +
-    "\052\001\001\000\002\001\001\000\002\001\001" });
+    "\044\001\001\000\002\001\001\000\002\001\001\000\004" +
+    "\016\052\001\001\000\004\015\050\001\001\000\002\001" +
+    "\001\000\004\017\046\001\001\000\004\006\047\001\001" +
+    "\000\002\001\001\000\004\006\051\001\001\000\002\001" +
+    "\001\000\004\006\053\001\001\000\002\001\001\000\002" +
+    "\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -441,7 +444,19 @@ consultaAct.setNuevoConectorRelacional("OR");
           return CUP$ParserCons$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 21: // conectorL ::= IGUAL 
+          case 21: // cad ::= PARAM 
+            {
+              Object RESULT =null;
+		int nomleft = ((java_cup.runtime.Symbol)CUP$ParserCons$stack.peek()).left;
+		int nomright = ((java_cup.runtime.Symbol)CUP$ParserCons$stack.peek()).right;
+		String nom = (String)((java_cup.runtime.Symbol) CUP$ParserCons$stack.peek()).value;
+		paramCompAct.setValorBuscar(nom);
+              CUP$ParserCons$result = parser.getSymbolFactory().newSymbol("cad",6, ((java_cup.runtime.Symbol)CUP$ParserCons$stack.peek()), ((java_cup.runtime.Symbol)CUP$ParserCons$stack.peek()), RESULT);
+            }
+          return CUP$ParserCons$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 22: // conectorL ::= IGUAL 
             {
               Object RESULT =null;
 		paramCompAct.setOperadorLogico("IGUAL");
@@ -450,7 +465,7 @@ consultaAct.setNuevoConectorRelacional("OR");
           return CUP$ParserCons$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 22: // conectorL ::= DESIG 
+          case 23: // conectorL ::= DESIG 
             {
               Object RESULT =null;
 		paramCompAct.setOperadorLogico("DESIG");
@@ -459,7 +474,7 @@ consultaAct.setNuevoConectorRelacional("OR");
           return CUP$ParserCons$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 23: // conectorL ::= MAYIG 
+          case 24: // conectorL ::= MAYIG 
             {
               Object RESULT =null;
 		paramCompAct.setOperadorLogico("MAYIG");
@@ -468,7 +483,7 @@ consultaAct.setNuevoConectorRelacional("OR");
           return CUP$ParserCons$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 24: // conectorL ::= MENIG 
+          case 25: // conectorL ::= MENIG 
             {
               Object RESULT =null;
 		paramCompAct.setOperadorLogico("MENIG");
@@ -477,7 +492,7 @@ consultaAct.setNuevoConectorRelacional("OR");
           return CUP$ParserCons$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 25: // conectorL ::= MAY 
+          case 26: // conectorL ::= MAY 
             {
               Object RESULT =null;
 		paramCompAct.setOperadorLogico("MAY");
@@ -486,7 +501,7 @@ consultaAct.setNuevoConectorRelacional("OR");
           return CUP$ParserCons$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 26: // conectorL ::= MEN 
+          case 27: // conectorL ::= MEN 
             {
               Object RESULT =null;
 		paramCompAct.setOperadorLogico("MEN");

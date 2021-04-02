@@ -15,10 +15,12 @@ import analizadores.ParserUsers;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import objetos.Campo;
 import objetos.Componente;
 import objetos.Consulta;
 import objetos.ErrorCom;
 import objetos.Formulario;
+import objetos.ParamComp;
 import objetos.Parametro;
 import objetos.Respuesta;
 import objetos.Solicitud;
@@ -40,12 +42,15 @@ public class Acciones {
     private List<Formulario> todosFormularios;
     private List<ErrorCom> erroresAcciones;
     private List<Respuesta> respuestasAcciones;
+    private List<Solicitud> consultasAcciones;
+    
 
     public Acciones(List<Solicitud> solicitudes, UsuariosFormularios userForms) {
         this.todosUsuarios = new ArrayList<>();
         this.todosFormularios = new ArrayList<>();
         this.erroresAcciones = new ArrayList<>();
         this.respuestasAcciones = new ArrayList<>();
+        this.consultasAcciones = new ArrayList<>();
         this.solicitudes = solicitudes;
         this.usuarios = userForms.getUsuarios();
         this.formularios = userForms.getFormularios();
@@ -117,7 +122,7 @@ public class Acciones {
                     modComp(solicitud);
                     break;
                 case "CONSULT":
-                    consult(solicitud);
+                    consultasAcciones.add(solicitud);
                     break;
                 default:
                     break;
@@ -507,7 +512,7 @@ public class Acciones {
                     paramTemp = null;
                 }
                 if (indiceCorrecto == true) {
-                    componentesForm.add(compIns);
+                    //componentesForm.add(compIns);
                     formMod.setComponentes(componentesForm);
                     insertarRespuesta("MODIFICAR_COMPONENTE", "Se modifico el componente: " + paramIdComp.getContenido().replace("\"", "")
                             + "al formulario: " + paramIdForm.getContenido().replace("\"", ""));
@@ -519,56 +524,8 @@ public class Acciones {
             insertarError("EL FORMULARIO AL QUE SE MODIFICARA NO EXISTE");
         }
     }
-
-    private void consult(Solicitud solicitud) {
-        String strRespuesta = "";
-        List<Parametro> parametros = solicitud.getParametros();
-        for (Parametro parametro : parametros) {            
-            //Obtener consulta
-            Consulta consulta = null;
-            String strCons = parametro.getContenido().replace("\"", "");
-            StringReader reader = new StringReader(strCons);
-            LexerCons lexico = new LexerCons(reader);
-            ParserCons parser = new ParserCons(lexico);
-            List<ErrorCom> errores;
-            try {
-                parser.parse();
-                consulta = parser.getConsulta();
-                errores = parser.getErroresCom();
-            } catch (Exception ex) {
-                System.out.println(ex);
-            }       
-            if (consulta == null) {
-                insertarError("LA CONSULTA NO SE PUDO REALIZAR");
-            }else{
-                Formulario formCons = null;
-                for (Formulario formulario : todosFormularios) {
-                    if (formulario.getIdForm().replace("\"", "").equals(consulta.getIdFormulario())) {
-                        formCons = formulario;
-                    }
-                }
-                if (formCons == null) {
-                    insertarError("LA CONSULTA NO SE PUDO REALIZAR DEBIDO A QUE"
-                            + "EL FORMULARIO: " + consulta.getIdFormulario() + " NO EXISTE");
-                }else{
-                    Formulario formEdit = new Formulario();                    
-                    List<String> parametrosMostrar = consulta.getParametrosMostrar();
-                    if (parametrosMostrar.size()==0) {
-                        formEdit = formCons;
-                        GenConsultForm genStrCons = new GenConsultForm(formEdit,formEdit.getCampos());
-                        strRespuesta = genStrCons.getFormsStr();
-                    }else{
-                        //Recoger parametros y agregarlos al formedit
-                        
-                        
-                    }
-                    
-                }
-                insertarRespuesta("CONSULTAS", strRespuesta);
-            }            
-        }
-
-    }
+    
+    //Consultas 
 
     private int getNuevoIndice(List<Componente> componentesForm, int indiceBus) {
         int index = -1;
@@ -768,6 +725,15 @@ public class Acciones {
     public void setRespuestasAcciones(List<Respuesta> respuestasAcciones) {
         this.respuestasAcciones = respuestasAcciones;
     }
+
+    public List<Solicitud> getConsultasAcciones() {
+        return consultasAcciones;
+    }
+    
+    public List<Formulario>  getTodosFormulario(){
+        return todosFormularios;
+    }
+        
 
     private String pruebaForms() {
         return "db.formularios(\n"

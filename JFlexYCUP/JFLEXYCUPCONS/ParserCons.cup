@@ -106,6 +106,7 @@ sig2 ::=
 cad ::=
             NUM:nom {:paramCompAct.setValorBuscar(nom);:}
         |   CADENA:nom {:paramCompAct.setValorBuscar(nom);:}
+        |   PARAM:nom   {:paramCompAct.setValorBuscar(nom);:}
 ;
 
 conectorL ::=

@@ -18,8 +18,8 @@ parser code {:
 		super(lex);
         this.erroresCom = lex.getErroresCom();
         this.respuestas = new ArrayList<>();      
-        errorAct = new ErrorCom(); 
-        respuestaAct = new Respuesta(); 
+        errorAct = new ErrorCom(null,null,null,null,null); 
+        respuestaAct = new Respuesta(null,null); 
 	}
 
     /**
@@ -70,22 +70,28 @@ terminal    String  CONT;
 
 
 /* Non-Terminals (created scanner). */
-non terminal  inicio,sig,par1,par2,nomp,fin1,fin2;
-
+non terminal  inicio,sig,par1,par2,nomp,fin1,fin2,fin3;
+//non terminal  sig2,inicio2,fin3;
 
 
 /* The grammar : */
 
 start with inicio;
 
-inicio ::= 
-            MEN EXCL INI_RESPS MAY sig MEN EXCL FIN_RESPS MAY 
+    inicio ::= 
+            MEN EXCL INI_RESPS MAY sig  
         |   sig
 ;
 
 sig ::=
-            MEN EXCL INI_RESP DOSPUNT ERR MAY CORCHI {:insertarNuevoError();:} par1 CORCHD MEN EXCL FIN_RESP MAY 
-        |   MEN EXCL INI_RESP DOSPUNT SOL MAY CORCHI {:insertarRespuesta();:} par2 CORCHD MEN EXCL FIN_RESP MAY 
+            MEN EXCL INI_RESP DOSPUNT ERR MAY CORCHI {:insertarNuevoError();:} par1 CORCHD MEN EXCL FIN_RESP MAY fin3
+        |   MEN EXCL INI_RESP DOSPUNT SOL MAY CORCHI {:insertarRespuesta();:} par2 CORCHD MEN EXCL FIN_RESP MAY  fin3
+;
+
+fin3 ::=
+            sig
+        |   MEN EXCL FIN_RESPS MAY
+        |
 ;
 
 par1 ::=

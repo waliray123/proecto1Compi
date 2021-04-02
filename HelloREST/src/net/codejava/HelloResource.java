@@ -2,6 +2,7 @@ package net.codejava;
 
 import Controladores.Acciones;
 import Controladores.GuardarFormularios;
+import Generadores.GenConsultas;
 import Generadores.GenHTMLForms;
 import Generadores.GenRespuestas;
 import Generadores.GenStrErrors;
@@ -171,10 +172,15 @@ public class HelloResource {
             String usuarios = acciones.getUsuarios();
             String formularios = acciones.getFormularios();
             this.guardarDB.guardarUsuariosyFormularios(usuarios, formularios);
-
-            //Generar Respuestas
+            //Generar consultas
             List<ErrorCom> erroresAcciones1 = acciones.getErroresAcciones();
             List<Respuesta> respuestasAcciones1 = acciones.getRespuestasAcciones();
+            GenConsultas genCons = new GenConsultas(acciones.getTodosFormulario(),acciones.getConsultasAcciones(), erroresAcciones1, respuestasAcciones1);
+            
+            //Generar Respuestas
+            erroresAcciones1 = genCons.getErroresAcciones();
+            respuestasAcciones1 = genCons.getRespuestasAcciones();
+            
             if (erroresAcciones1.size() > 0) {
                 GenStrErrors genStrErrors = new GenStrErrors(erroresAcciones1);
                 respuestas = genStrErrors.getErroresStr();

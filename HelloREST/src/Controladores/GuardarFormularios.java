@@ -91,7 +91,7 @@ public class GuardarFormularios {
                         dbFormularios += "\n,";
                     }
                     dbFormularios += "\n{";
-                    dbFormularios += "\n\"NOMBRE_CAMPO\" : "+"\"" + campo.getNombreCampo()+"\"";
+                    dbFormularios += "\n\"NOMBRE_CAMPO\" : "+"\"" + campo.getNombreCampo().replace("\"", "")+"\"";
                     List<String> registros = campo.getRegistros();
                     for (String registro : registros) {
                         dbFormularios += " ,";

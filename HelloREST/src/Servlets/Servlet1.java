@@ -88,10 +88,11 @@ public class Servlet1 extends HttpServlet {
         todosFormularios = " ";
         this.paramIdForm = request.getParameter("idForm");
         todosFormularios = getFormulariosServer(paramIdForm);
-        obtenerFormularios();
+        obtenerFormularios();        
         obtenerHTML(paramIdForm);
-        guardarDatos(request);
-        System.out.println("");
+        if (this.formularioAct != null) {
+            guardarDatos(request);        
+        }        
         processRequest(request, response);
     }
 
@@ -378,14 +379,32 @@ public class Servlet1 extends HttpServlet {
         return opciones;
     }
 
-    private void guardarDatos(HttpServletRequest request) {
+    private void guardarDatos(HttpServletRequest request) {        
         List<Componente> componentes = formularioAct.getComponentes();
         List<Campo> campos = formularioAct.getCampos();
         boolean estaCampo = false;
-        for (Componente componente : componentes) {            
+        for (Componente componente : componentes) {
             estaCampo = false;
+            //Validar si el componente es un checkbox
+            String claseComp = componente.getClase().replace("\"", "");
             String nombreCamp = componente.getNombre().replace("\"", "");
-            String registro = request.getParameter(nombreCamp);
+            String registro = "";
+            if (claseComp.equalsIgnoreCase("CHECK_BOX")) {
+                String[] registros = request.getParameterValues(nombreCamp);
+                if (registros != null) {
+                    int contR = 0;
+                    for (String registro1 : registros) {
+                        if (contR > 0) {
+                            registro += ",";
+                        }
+                        registro += registro1;
+                        contR++;
+                    }
+                }
+            } else {
+                registro = request.getParameter(nombreCamp);
+            }
+
             if (registro != null && registro.isEmpty() == false) {
                 for (Campo campoF : campos) {
                     String nombreCampForm = campoF.getNombreCampo().replace("\"", "");
@@ -408,15 +427,15 @@ public class Servlet1 extends HttpServlet {
                 formulario.setCampos(this.formularioAct.getCampos());
             }
         }
-        
+
         String usuarios = getUsuariosStr("getusers");
         GuardarFormularios guardarforms = new GuardarFormularios(this.formularios);
         String formulariosStr = guardarforms.getDbFormularios();
-        String guardado = guardarUsuariosForms(usuarios,formulariosStr);
+        String guardado = guardarUsuariosForms(usuarios, formulariosStr);
         //System.out.println("");
     }
-    
-    private String getUsuariosStr(String db){
+
+    private String getUsuariosStr(String db) {
         WebTarget resource = webTarget;
         if (db != null) {
             resource = resource.queryParam("db", db);
@@ -424,17 +443,17 @@ public class Servlet1 extends HttpServlet {
         resource = resource.path("prueba");
         return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
     }
-    
-    private String guardarUsuariosForms(String strU,String strF){
+
+    private String guardarUsuariosForms(String strU, String strF) {
         //WebTarget resource = webTarget;
         Form form = new Form();
         form.param("strU", strU);
         form.param("strF", strF);
         //resource = resource.path("guardarForms");
         String pruebaRetorno = webTarget.path("guardarForms").request(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(form,MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class );
+                .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
         //return pruebaRetorno;
-        
+
         return pruebaRetorno;
     }
 
